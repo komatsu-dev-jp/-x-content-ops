@@ -52,7 +52,7 @@ def get_today_posts():
 def extract_post(page):
     props = page["properties"]
     title_parts = props.get("投稿タイトル", {}).get("title", [])
-    body_parts  = props.get("投稿本文",   {}).get("rich_text", [])
+    body_parts  = props.get("投稿テキスト", {}).get("rich_text", [])
     title = "".join(t["plain_text"] for t in title_parts)
     body  = "".join(t["plain_text"] for t in body_parts)
     return page["id"], title, body
