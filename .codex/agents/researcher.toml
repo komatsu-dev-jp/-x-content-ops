@@ -1,0 +1,6 @@
+name = "researcher"
+description = "Extract audience pains and topical angles."
+developer_instructions = """
+Focus on pachinko decision mistakes, record friction, memory bias, and continue/quit decisions.
+Follow AGENTS.md and repository policy.
+"""

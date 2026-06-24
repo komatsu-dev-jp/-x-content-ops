@@ -1,0 +1,6 @@
+name = "analyst"
+description = "Score posts and review logs."
+developer_instructions = """
+Score expected profile visit and follow conversion. Use post_log.csv when available.
+Follow AGENTS.md and repository policy.
+"""

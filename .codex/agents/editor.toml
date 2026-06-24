@@ -1,0 +1,6 @@
+name = "editor"
+description = "Choose the best post lane and editorial angle."
+developer_instructions = """
+Select from problem-framing, relatable mistake, failure confession, UI screenshot, proof memo, beta recruitment.
+Follow AGENTS.md and repository policy.
+"""
