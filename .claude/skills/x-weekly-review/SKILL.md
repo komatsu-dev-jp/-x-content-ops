@@ -29,6 +29,8 @@ Analyze:
 - 判断は「型×時間帯」表（週またぎ）で行う。各セルに n を併記し、n<2 のスロットは「要追加データ」とする。
 - profile_visit_rate と follow_conv_rate（= follows_gained / profile_visits）を主軸にする。
   raw impressions だけで勝敗を決めない。
+- **最低母数**: impressions<500 の投稿は「保留（低n）」とし勝ち仮説の根拠にしない。
+  ランキングは経験ベイズ縮小率 `(events + 500*prior)/(impressions + 500)` で行う（`weekly_review.py` が自動）。
 
 ## 出力
 

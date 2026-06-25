@@ -31,6 +31,21 @@ quality_score =
   0.10 * like_rate
 ```
 
+## 最低母数とスムージング（重要）
+
+少数インプレッションの偶然当たりを「勝ち」と誤認しないための統計ルール。
+
+- **最低母数: impressions < 500 の投稿は「保留（低信頼）」**として扱い、勝ち仮説の根拠にしない。
+- ランキングは生のrateではなく**経験ベイズ縮小率**で行う:
+
+```text
+shrunk_rate = (events + K * prior) / (impressions + K)
+  prior = 母集団平均率（全posted行の events合計 / impressions合計）
+  K = 500（疑似カウント。impが小さいほど prior へ引き戻す）
+```
+
+`scripts/weekly_review.py` がこの縮小率で profile_visit を順位付けし、`impressions<500` を `(低n)` と明示する。
+
 ## Caution
 
 Raw impressions alone are not success.

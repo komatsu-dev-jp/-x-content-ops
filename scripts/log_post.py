@@ -101,6 +101,12 @@ def main():
         for r in rows:
             w.writerow({c: r.get(c, "") for c in header})
     print(f"{action}: {data['post_id']} (quality_score={target.get('quality_score') or 'n/a'})")
+    try:
+        imp = float(target.get("impressions") or 0)
+    except ValueError:
+        imp = 0
+    if 0 < imp < 500:
+        print("⚠️ impressions<500: 各rateは母数不足で偶然のブレが大きい。週次は縮小率で判断する（保留扱い）。")
 
 
 if __name__ == "__main__":

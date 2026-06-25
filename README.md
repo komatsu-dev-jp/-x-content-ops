@@ -88,6 +88,16 @@ output/posts/            過去に生成した投稿ドラフト（履歴）
 ```text
 npm run validate   # 標準入力の投稿の文字数・禁止語チェック（exit 1 で不可）
 npm run score      # 投稿候補を100点で採点
-npm run weekly     # post_log.csv から週次レビュー
+npm run weekly     # post_log.csv から週次レビュー（セグメント別＋縮小率ランキング）
 npm run log -- --set post_id=... status=posted impressions=... profile_visits=...  # ログ追記/更新
+npm run schedule   # post_log.csv → X Pro予約投稿用スケジュール・ワークシートCSV
 ```
+
+## 統計的な勝敗判定
+
+少数インプレッションの偶然当たりを「勝ち」と誤認しないため、週次レビューは次を守ります。
+
+- impressions < 500 の投稿は「保留（低n）」として勝ち仮説の根拠にしない
+- ランキングは経験ベイズ縮小率 `(events + 500*prior)/(impressions + 500)` で行う
+
+詳細は `prompts/scoring-rubric.md`。

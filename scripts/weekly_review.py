@@ -14,6 +14,12 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+# 統計的厳密性: 少数インプレッションの偶然当たりを過大評価しない。
+# - MIN_IMP 未満は「保留（低信頼）」として明示。
+# - ランキングは経験ベイズ縮小率で行う: (events + K*prior) / (impressions + K)
+MIN_IMP = 500
+SHRINK_K = 500
+
 
 def f(row, key):
     try:
@@ -25,6 +31,20 @@ def f(row, key):
 def avg(rows, key):
     vals = [f(r, key) for r in rows if r.get(key) not in (None, "")]
     return sum(vals) / len(vals) if vals else 0.0
+
+
+def prior_rate(rows, event_col):
+    """全 posted 行から算出する事前確率（=母集団平均率）。"""
+    ev = sum(f(r, event_col) for r in rows)
+    imp = sum(f(r, "impressions") for r in rows)
+    return ev / imp if imp > 0 else 0.0
+
+
+def shrunk(row, event_col, prior, k=SHRINK_K):
+    """経験ベイズ縮小率。impが小さいほど prior へ引き戻す。"""
+    imp = f(row, "impressions")
+    ev = f(row, event_col)
+    return (ev + k * prior) / (imp + k) if (imp + k) > 0 else 0.0
 
 
 def seg_table(title, rows, group_key, metrics):
@@ -90,10 +110,14 @@ def main():
               f"q={r.get('quality_score')} | pv_rate={r.get('profile_visit_rate')} | "
               f"first_line={r.get('first_line')}")
 
-    print("\n## Top Posts（profile_visit_rate順）")
-    for r in sorted(posted, key=lambda r: f(r, "profile_visit_rate"), reverse=True)[:5]:
+    prior_pv = prior_rate(posted, "profile_visits")
+    print(f"\n## Top Posts（プロフィール遷移・信頼度補正 / 縮小率, prior={prior_pv:.4f}, K={SHRINK_K}）")
+    print(f"> 生のpv_rateではなく縮小率で順位付け。impressions<{MIN_IMP} は (低n) として保留。")
+    for r in sorted(posted, key=lambda r: shrunk(r, "profile_visits", prior_pv), reverse=True)[:5]:
+        low = " (低n)" if f(r, "impressions") < MIN_IMP else ""
         print(f"- {r.get('post_id')} | {r.get('post_type')} | {r.get('time_slot')} | "
-              f"pv_rate={r.get('profile_visit_rate')} | follow_conv={r.get('follow_conv_rate')}")
+              f"shrunk_pv={shrunk(r, 'profile_visits', prior_pv):.4f} | "
+              f"raw_pv={r.get('profile_visit_rate')} | imp={r.get('impressions')}{low}")
 
     print("\n## Bottom Posts（quality_score順）")
     for r in sorted(posted, key=lambda r: r["_q"])[:5]:
