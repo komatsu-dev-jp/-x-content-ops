@@ -2,6 +2,8 @@
 
 PachiTrackerのX運用を、Claude Code / Codex のSkill・Subagentで「小さな会社組織」のように分担して回すためのリポジトリです。
 
+> 🚀 **初めての方は [docs/QUICKSTART.md](docs/QUICKSTART.md) を先に読んでください**（この順でやればOK、という使い方の1枚）。
+
 ## 結論
 
 このリポジトリは、Xを完全自動運用するためのものではありません。目的は、PachiTrackerの思想に合った投稿を安定して作り、投稿前に品質とリスクを判定し、投稿後にログから勝ち型を更新することです。
