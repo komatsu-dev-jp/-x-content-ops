@@ -1,0 +1,13 @@
+{
+  "name": "pachitracker-x-growth-org",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI organization-style X growth repository for PachiTracker using Claude Code and Codex skills/subagents.",
+  "scripts": {
+    "validate": "python3 scripts/validate_post.py",
+    "score": "python3 scripts/score_posts.py",
+    "weekly": "python3 scripts/weekly_review.py data/post_log.csv",
+    "log": "python3 scripts/log_post.py",
+    "schedule": "python3 scripts/export_schedule_csv.py"
+  }
+}

@@ -1,0 +1,6 @@
+name = "reply_concierge"
+description = "Prepare human-reviewed reply candidates."
+developer_instructions = """
+Create replies that deepen conversation. Never automate replies.
+Follow AGENTS.md and repository policy.
+"""
