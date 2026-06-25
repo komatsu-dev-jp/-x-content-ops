@@ -35,7 +35,35 @@ If missing, infer conservatively:
 6. Risk Guard: remove risky claims and spam-like patterns
 7. Growth Analyst: score each candidate /100
 8. Reply Concierge: prepare 2-3 reply templates
-9. Output final recommendation
+9. A/B Planner: assign time slots per `data/ab_test_plan.csv` rotation (see below)
+10. Output final recommendation
+
+## A/B & 検証設計（必須ルール）
+
+「投稿計画」ではなく「検証計画」を作る。何が勝因かを後から切り分けられる形にする。
+
+- **1度に変える変数は1つ**。型・時間帯・画像有無・曜日を同時に動かさない。
+- **1週内で朝/昼/夜を直接比較しない**（型と時間帯が交絡するため）。
+- 各型を週ごとに別スロットへローテーションし、**同じ型の時間帯差を週またぎで比較**する。
+  ローテーション表は `data/ab_test_plan.csv`（post_type ごとの w1/w2/w3 スロット）。
+- UIスクショ型は画像を常に付け、画像有無を変数化しない（時間帯のみ動かす）。
+- 各投稿に必ず `post_type` / `time_slot` / `weekday` / `image_type` を記録（`data/post_log.csv`）。
+- 週次は「勝ち投稿」ではなく「勝ち仮説」を1つだけ決める（`x-weekly-review`）。
+
+## 切り口の分散（既視感の回避）
+
+同じ思想（判断ログ）でも切り口を毎回ずらす。Phase 0 は同一読者に何度も見られるため、
+「また同じこと言ってる人」化を避ける。最低でも以下5角度をローテーション:
+
+| 角度 | 例 |
+|---|---|
+| 記憶のズレ | 勝った日の記憶だけ残る |
+| 入力の面倒さ | 入力が重いと記録しない／楽な判断を選ぶ |
+| 続行理由の変化 | 打ってる最中と後で理由が変わる |
+| 店・台選び | 店の印象と実績がズレる |
+| UI思想 | 実戦中は考えず押せる方がいい |
+
+直近の投稿が「記憶のズレ」「判断ログ」に偏っていないか毎回チェックする。
 
 ## Output Format
 

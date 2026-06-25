@@ -58,6 +58,11 @@ def derive_rates(row):
     for rate_col, count_col in pairs.items():
         if row.get(count_col):
             row[rate_col] = f"{f(count_col) / imp:.4f}"
+    # follow_conv_rate: フォロー転換率 = follows_gained / profile_visits
+    # （プロフィールに来た人のうち何%がフォローしたか。分母はインプレッションではない）
+    pv = f("profile_visits")
+    if pv > 0 and row.get("follows_gained"):
+        row["follow_conv_rate"] = f"{f('follows_gained') / pv:.4f}"
     # quality_score: profile/follow を最優先する重み付け
     quality = (
         0.30 * f("profile_visit_rate")

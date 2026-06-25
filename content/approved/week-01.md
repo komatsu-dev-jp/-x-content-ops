@@ -51,11 +51,11 @@ KPI優先順位: profile_visit_rate → follow_rate → reply_rate → repost_ra
 ・投資したからヤメられない
 
 どれも、判断が感情に寄ってるサイン。
-記録して後で見直すと、わりと冷静になれる。
+記録して後で見直すと、続けた理由がいつの間にか変わってる。
 ```
 
 - post_type: あるある型
-- char_count: 83（140字以内 ✅）
+- char_count: 91（140字以内 ✅）
 - score: 85/100（validate: pass）
 - breakdown: 箇条書きで自分事化○ / 痛点3点○ / PachiTracker接続（思想）○ / 売り込み臭 ほぼ無 / リスク 低
 - risk_flags: `none`
@@ -97,20 +97,20 @@ PachiTrackerは、実戦中に迷わない入力を優先しています。
 
 だからPachiTrackerは、実戦中に迷わず押せる記録画面を優先しました。
 
-台選び・続行・撤退を、その場で一押し。
+台選び・続行・撤退を、その場でサッと記録。
 
 #個人開発
 ```
 
 - post_type: UIスクショ型
-- char_count: 88（140字以内 ✅）
+- char_count: 90（140字以内 ✅）
 - score: 90/100（validate: pass）
 - breakdown: 1行目フック○ / 痛点（入力負担）○ / PachiTracker接続○ / プロフィール遷移期待◎（実画面）/ リスク 低
 - risk_flags: `none`（※採点スクリプトの `product_name_too_early` はスタイル上の軽微指摘。本文構造上、問題なしと判断）
 - recommended_time_slot: **夜 21:00〜22:30**（UI相談・実戦者枠）
 - image_suggestion: **記録画面のスクショ必須**（店舗名・個人情報・他社UI流用・未実装機能の写り込みがないか確認）
 - reply_templates:
-  1. （深掘り）「実戦中だと何タップで入れたいですか？ 一押しでも多いと感じる場面ありますか？」
+  1. （深掘り）「実戦中だと何タップで入れたいですか？ 入力が多いと感じる場面ってありますか？」
   2. （UI相談返信）「ありがとうございます。見た目より『迷わず押せるか』を優先したいので、その視点で調整してみます。」
 
 ---
@@ -122,11 +122,11 @@ PachiTrackerは、実戦中に迷わない入力を優先しています。
 
 PachiTrackerのβ版を、少人数で触ってもらう準備をしています。
 
-あとで判断を振り返れる部分から試せます。
+あとで判断を振り返れる部分から、試してもらう予定です。
 ```
 
 - post_type: β募集型
-- char_count: 89（140字以内 ✅）
+- char_count: 96（140字以内 ✅）
 - score: 90/100（validate: pass）
 - breakdown: 対象明確○ / 痛点接続○ / 控えめCTA○（Phase 0は煽らない）/ リスク 低
 - risk_flags: `none`（※採点スクリプトの `product_name_too_early` はスタイル上の軽微指摘。募集文として許容）
@@ -138,17 +138,21 @@ PachiTrackerのβ版を、少人数で触ってもらう準備をしています
 
 ---
 
-## 時間帯A/Bの割り当て（今週の検証設計）
+## A/B割り当て（型×時間帯ローテーションの Week 1）
 
-| post_id | 型 | 時間帯 | 検証狙い |
+> ⚠️ 検証設計の前提（重要）: 1週内では「時間帯」と「型」が交絡するため、**同じ週の朝/昼/夜を直接比較しない**。
+> 各型を週ごとに別の時間帯へローテーションし、**同じ型の時間帯差を週またぎで比較する**（設計の全体像は `data/ab_test_plan.csv`）。
+> Week 1 はローテーションの基準（baseline）スロット。
+
+| post_id | 型 | 時間帯（W1=baseline） | 次週の移動先 |
 |---|---|---|---|
-| week01-p1 | 問題提起 | 朝 08:00-09:30 | 朝の思想系の遷移率 |
-| week01-p3 | 失敗告白 | 朝 08:00-09:30 | 朝の開発系の遷移率 |
-| week01-p2 | あるある | 昼 12:00-13:00 | 昼の軽い投稿の遷移率 |
-| week01-p4 | UIスクショ | 夜 21:00-22:30 | 夜の実戦者向け遷移率 |
-| week01-p5 | β募集 | 夜 21:00-22:30 | 夜のβ反応 |
+| week01-p1 | 問題提起 | 朝 08:00-09:30 | → 夜（W2） |
+| week01-p3 | 失敗告白 | 朝 08:00-09:30 | → 昼（W2） |
+| week01-p2 | あるある | 昼 12:00-13:00 | → 朝（W2） |
+| week01-p4 | UIスクショ | 夜 21:00-22:30 | → 昼（W2） |
+| week01-p5 | β募集 | 夜 21:00-22:30 | （隔週運用 / W3で朝） |
 
-朝2 / 昼1 / 夜2 で全3枠をカバー。投稿後24〜48時間で `data/post_log.csv` に実績入力 → `python3 scripts/weekly_review.py` で勝ち時間帯を判定する。
+投稿後24〜48時間で `data/post_log.csv` に実績入力（`weekday` / `image_type` も必ず埋める）→ `python3 scripts/weekly_review.py` でセグメント別（型・時間帯・画像有無・曜日）に `profile_visit_rate` とフォロー転換率を集計する。
 
 ---
 
@@ -157,12 +161,13 @@ PachiTrackerのβ版を、少人数で触ってもらう準備をしています
 投稿前は以下を `data/post_log.csv` に追記しておき、24〜48時間後に impressions 以降の実績を埋める。
 カラム順は `data/post_log.csv` のヘッダに準拠。
 
-```csv
-2026-06-25,week01-p1,scheduled,判断ミス,問題提起型,memory_bias,FALSE,FALSE,FALSE,2,morning,102,昨日出ていた台に今日も座ってしまう,soft,,,,,,,,,,,,,,,
-2026-06-26,week01-p2,scheduled,撤退判断,あるある型,relatable,FALSE,FALSE,FALSE,0,noon,83,これやりがち,none,,,,,,,,,,,,,,,
-2026-06-27,week01-p3,scheduled,継続設計,失敗告白型,confession,FALSE,FALSE,FALSE,0,morning,100,記録アプリを自分で作ってるのに入力をサボった,soft,,,,,,,,,,,,,,,
-2026-06-29,week01-p4,scheduled,UI,UIスクショ型,pain_hook,TRUE,FALSE,FALSE,1,night,88,入力が面倒だと楽な判断を選ぶ,soft,,,,,,,,,,,,,,,
-2026-06-30,week01-p5,scheduled,β募集,β募集型,target_call,FALSE,FALSE,FALSE,0,night,89,記録で見直したい人へ,beta,,,,,,,,,,,,,,,
+予約行は `data/post_log.csv` に登録済み。新カラム `image_type`（none/screenshot/card/mockup）と `weekday` も投稿前に埋める。投稿後は `npm run log` で実績を追記する（カラム順は自動整列されるので手書きより安全）:
+
+```bash
+npm run log -- --set post_id=week01-p1 status=posted \
+  impressions=1200 engagements=90 profile_visits=48 follows_gained=3 \
+  weekday=thu image_type=none
 ```
 
+`profile_visit_rate` / `follow_rate` / `follow_conv_rate` / `quality_score` は自動計算される。
 投稿が完了したら `status` を `scheduled` → `posted` に更新する。
