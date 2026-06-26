@@ -99,20 +99,41 @@ def line(label, done, goal, label_w):
     return f"{lbl}  {done}/{goal}  {bar(done, goal)}  あと{goal - done}件"
 
 
-def show_status():
+def compute_status():
+    """進捗を構造化して返す（表示・Slack通知の共通ソース）。"""
     goals = load_goals()
-    label_w = max((disp_width(s["label"]) for s in goals.values()), default=4)
-    done_total = goal_total = 0
-    print(f"📅 本日のタスク ({today()})\n")
+    tasks, done_total, goal_total = [], 0, 0
     for task, spec in goals.items():
         goal = int(spec.get("goal") or 0)
         done = count_today(task, spec)
-        print(line(spec.get("label", task), done, goal, label_w))
+        tasks.append({"label": spec.get("label", task), "done": done, "goal": goal})
         done_total += min(done, goal)
         goal_total += goal
+    return {"date": today(), "tasks": tasks, "done_total": done_total, "goal_total": goal_total}
+
+
+def show_status():
+    st = compute_status()
+    label_w = max((disp_width(t["label"]) for t in st["tasks"]), default=4)
+    print(f"📅 本日のタスク ({st['date']})\n")
+    for t in st["tasks"]:
+        print(line(t["label"], t["done"], t["goal"], label_w))
+    done_total, goal_total = st["done_total"], st["goal_total"]
     print(f"\n合計 {done_total}/{goal_total} 完了", end="")
     print(" 🎉 本日のノルマ達成！" if done_total >= goal_total and goal_total > 0
           else f"（残り {goal_total - done_total} 件）")
+
+
+def maybe_notify(argv):
+    """--notify が付いていれば Slack へ実数つき進捗を送る（任意）。"""
+    if "--notify" not in argv:
+        return
+    sys.path.insert(0, str(Path(__file__).parent))
+    try:
+        import notify_slack
+        notify_slack.run()
+    except Exception as e:  # 通知失敗で本処理を止めない
+        print(f"(Slack通知スキップ: {e})")
 
 
 def done_task(argv):
@@ -130,6 +151,8 @@ def done_task(argv):
 
     data = {}
     for p in rest[1:]:
+        if p.startswith("--"):  # 他のフラグ（--notify など）は無視
+            continue
         if "=" not in p:
             sys.exit(f"bad pair (need key=value): {p}")
         k, v = p.split("=", 1)
@@ -157,6 +180,7 @@ def main():
         done_task(argv)
     else:  # default / --status
         show_status()
+    maybe_notify(argv)
 
 
 if __name__ == "__main__":

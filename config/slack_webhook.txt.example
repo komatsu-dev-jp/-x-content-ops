@@ -1,0 +1,6 @@
+# Slack Incoming Webhook URL をこの下に1行で貼り、
+# このファイルを config/slack_webhook.txt にリネームしてください（.gitignore済み）。
+# 例: https://hooks.slack.com/services/T000/B000/xxxxxxxx
+#
+# もしくは環境変数で渡す方が安全:
+#   export SLACK_WEBHOOK_URL="https://hooks.slack.com/services/..."
