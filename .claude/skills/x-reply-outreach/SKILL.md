@@ -77,11 +77,14 @@ description: |
 人間が選んだ返信を手で送信したら、その1件を本日のタスクに数える:
 
 ```
-npm run today -- --done-reply target_url=<相手投稿URL> archetype=<使った型> [got_reply=0 profile_visit=0 follow=0 note=...]
+npm run today -- --done reply target_url=<相手投稿URL> note=<使った型など>
 ```
 
 → `本日のタスク リプ周り 2/5 あと3件` のように進捗が出る（目標は `data/daily_goals.json`）。
+いいね・フォローも同様（`--done like count=5` / `--done follow target_url=...`）。
 進捗だけ見たいときは `npm run today`。**送信は人間。スクリプトは数えるだけで投稿しない。**
+
+返信が返ってきたか等の成果は、後日 `data/reply_outreach_log.csv` に記録して週次分析に使う（任意・日次カウントとは別）。
 
 ## Hard Constraints
 
