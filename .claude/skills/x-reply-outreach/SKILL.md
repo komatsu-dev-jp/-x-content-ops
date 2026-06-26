@@ -72,6 +72,17 @@ description: |
 - 必要なら本文の事実確認を
 ```
 
+## 投稿後（任意・進捗カウント）
+
+人間が選んだ返信を手で送信したら、その1件を本日のタスクに数える:
+
+```
+npm run today -- --done-reply target_url=<相手投稿URL> archetype=<使った型> [got_reply=0 profile_visit=0 follow=0 note=...]
+```
+
+→ `本日のタスク リプ周り 2/5 あと3件` のように進捗が出る（目標は `data/daily_goals.json`）。
+進捗だけ見たいときは `npm run today`。**送信は人間。スクリプトは数えるだけで投稿しない。**
+
 ## Hard Constraints
 
 - 自動返信・自動巡回をしない（候補のみ。人間が選んで手動送信）

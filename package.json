@@ -9,6 +9,7 @@
     "weekly": "python3 scripts/weekly_review.py data/post_log.csv",
     "log": "python3 scripts/log_post.py",
     "schedule": "python3 scripts/export_schedule_csv.py",
-    "tweet": "python3 scripts/fetch_tweet.py"
+    "tweet": "python3 scripts/fetch_tweet.py",
+    "today": "python3 scripts/daily_tracker.py"
   }
 }
