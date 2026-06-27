@@ -1,6 +1,6 @@
 date,post_id,status,theme,post_type,hook_type,has_image,image_type,has_video,link_in_body,hashtags,time_slot,weekday,char_count,first_line,cta_type,impressions,engagements,likes,reposts,replies,bookmarks,media_views,profile_visits,link_clicks,follows_gained,like_rate,repost_rate,reply_rate,profile_visit_rate,follow_rate,follow_conv_rate,quality_score,notes
 2026-06-25,week01-p1,posted,判断ミス,問題提起型,memory_bias,FALSE,none,FALSE,FALSE,2,morning,thu,102,昨日出ていた台に今日も座ってしまう,soft,44,2,1,0,0,,,0,,0,0.0227,0.0000,0.0000,0.0000,0.0000,,0.23,詳細クリック1
-2026-06-26,week01-p2,posted,撤退判断,あるある型,relatable,FALSE,none,FALSE,FALSE,0,noon,fri,91,これやりがち,none,,,,,,,,,,,,,,,,,,
+2026-06-27,week01-p2,posted,撤退判断,あるある型,relatable,FALSE,none,FALSE,FALSE,0,noon,fri,91,これやりがち,none,,,,,,,,,,,,,,,,,,
 2026-06-27,week01-p3,scheduled,継続設計,失敗告白型,confession,FALSE,none,FALSE,FALSE,0,morning,sat,100,記録アプリを自分で作ってるのに入力をサボった,soft,,,,,,,,,,,,,,,,,,
 2026-06-29,week01-p4,scheduled,UI,UIスクショ型,pain_hook,TRUE,screenshot,FALSE,FALSE,1,night,mon,90,入力が面倒だと楽な判断を選ぶ,soft,,,,,,,,,,,,,,,,,,
 2026-06-30,week01-p5,scheduled,β募集,β募集型,target_call,FALSE,none,FALSE,FALSE,0,night,tue,96,記録で見直したい人へ,beta,,,,,,,,,,,,,,,,,,
