@@ -140,7 +140,7 @@ def done_task(argv):
     i = argv.index("--done")
     rest = argv[i + 1:]
     if not rest:
-        sys.exit("usage: --done <task> [count=N target_url=... note=...]")
+        sys.exit("usage: --done <task> [count=N target_url=... note=...] [--date YYYY-MM-DD]")
     task = rest[0]
     goals = load_goals()
     manual = [t for t, s in goals.items() if s.get("source") != "post_log"]
@@ -149,8 +149,20 @@ def done_task(argv):
     if goals[task].get("source") == "post_log":
         sys.exit(f"'{task}' は post_log から自動集計します。投稿は `npm run log` で記録してください。")
 
+    # --date YYYY-MM-DD で過去日付への後追い記録が可能
+    record_date = today()
+    filtered = []
+    j = 1
+    while j < len(rest):
+        if rest[j] == "--date" and j + 1 < len(rest):
+            record_date = rest[j + 1]
+            j += 2
+        else:
+            filtered.append(rest[j])
+            j += 1
+
     data = {}
-    for p in rest[1:]:
+    for p in filtered:
         if p.startswith("--"):  # 他のフラグ（--notify など）は無視
             continue
         if "=" not in p:
@@ -162,7 +174,7 @@ def done_task(argv):
         sys.exit(f"unknown keys: {unknown} (使えるのは count / target_url / note)")
 
     row = {c: "" for c in ACT_COLS}
-    row.update({"date": today(), "task": task, "count": data.get("count", "1"),
+    row.update({"date": record_date, "task": task, "count": data.get("count", "1"),
                 "target_url": data.get("target_url", ""), "note": data.get("note", "")})
     write_header = not ACTIVITY_LOG.exists()
     with ACTIVITY_LOG.open("a", encoding="utf-8", newline="") as f:
@@ -170,7 +182,8 @@ def done_task(argv):
         if write_header:
             w.writeheader()
         w.writerow(row)
-    print(f"✅ {goals[task].get('label', task)} +{row['count']} を記録\n")
+    past = f"（{record_date} 付け）" if record_date != today() else ""
+    print(f"✅ {goals[task].get('label', task)} +{row['count']} を記録{past}\n")
     show_status()
 
 
