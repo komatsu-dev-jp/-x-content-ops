@@ -93,11 +93,23 @@
 
 リプ案を出すときはターゲットの tier を分かる範囲で添える。フォロワー数が画面から読めない場合は「不明」と明示し、推測で断定しない。
 
-記録・更新コマンド:
+50,000〜100,000は表の隙間のためBに含める。500未満の小型アカウントは暫定でAに含める（A本来の下限より小さい点は記録時に明示する）。
+
+### アカウント登録（2回目以降は自動でtierが付く）
+
+`data/account_tiers.csv` にハンドルとフォロワー数を登録しておくと、以降そのアカウントへの `npm run today -- --done reply` で tier を省略しても自動で引かれる。
 
 ```
-# 送信直後
-npm run reply-log -- --add target_url=<URL> tier=A/B/C archetype=<型> note=<メモ>
+# フォロワー数が分かったら登録（tierは自動計算）
+npm run reply-log -- --set-account handle=matutakenet followers=14113
+```
+
+### 記録コマンド
+
+```
+# 送信直後（1コマンドで日次カウント＋tier比率の両方に記録される）
+npm run today -- --done reply target_url=<URL> tier=A/B/C archetype=<型> note=<メモ>
+# tier省略時はaccount_tiers.csvに登録があれば自動参照、なければ未設定のまま
 
 # 後日、反応が分かったら
 npm run reply-log -- --update target_url=<URL> got_reply=1 profile_visit=1 follow=0
