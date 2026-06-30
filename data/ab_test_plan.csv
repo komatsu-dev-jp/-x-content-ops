@@ -1,6 +1,6 @@
 post_type,w1_slot,w2_slot,w3_slot,fixed_factors,primary_metric,secondary_metric,winning_slot,decision,notes
 問題提起型,morning,night,noon,型・テーマ・画像なしを固定,profile_visit_rate,follow_conv_rate,,,W1朝→W2夜→W3昼で3枠カバー。同型の週またぎ比較で時間帯効果を分離する
-あるある型,noon,morning,night,型・テーマ・画像なしを固定,profile_visit_rate,follow_conv_rate,,,W1昼→W2朝→W3夜
+あるある型,noon,morning,night,型・テーマ・画像なしを固定,profile_visit_rate,follow_conv_rate,noon(仮),要追加データ(n=1),W1昼→W2朝→W3夜。W1のweek01-p2(noon)で今週唯一pv発生(0.0120,imp=83,低n)。再現性確認のためW2もnoon維持を検討
 失敗告白型,morning,noon,night,型・テーマ・画像有無を固定,profile_visit_rate,follow_conv_rate,,,W1朝→W2昼→W3夜
 UIスクショ型,night,noon,morning,画像は常にスクショ固定し時間帯のみ変える,profile_visit_rate,follow_conv_rate,,,W1夜→W2昼→W3朝。画像有無は変数にしない
 検証メモ型,,night,morning,型・テーマを固定,profile_visit_rate,follow_conv_rate,,,W2投入(夜baseline)→W3朝
