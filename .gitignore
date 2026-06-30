@@ -141,3 +141,10 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Slack webhook (secret) — do not commit
+config/slack_webhook.txt
+
+# Python
+__pycache__/
+*.pyc

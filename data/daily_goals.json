@@ -1,0 +1,6 @@
+{
+  "post":   { "goal": 1,  "label": "投稿",     "source": "post_log" },
+  "reply":  { "goal": 5,  "label": "リプ周り", "source": "manual" },
+  "like":   { "goal": 10, "label": "いいね",   "source": "manual" },
+  "follow": { "goal": 3,  "label": "フォロー", "source": "manual" }
+}
