@@ -78,5 +78,31 @@
 
 主軸は **返信が返ってきたか → プロフィール遷移 → フォロー**。いいねは参考程度。
 記録する場合は `data/reply_outreach_log.csv`（任意）に
-`date, target_url, archetype, got_reply(0/1), profile_visit(0/1), follow(0/1), note` を残し、
+`date, target_url, tier, archetype, got_reply(0/1), profile_visit(0/1), follow(0/1), note` を残し、
 週次でどの型が返信を取れているかを見る。
+
+## ターゲットの tier 比率（Notion「対象比率」基準）
+
+リプ周りの対象は、フォロワー規模で次の比率を目安に配分する:
+
+| tier | フォロワー規模 | 目標比率 | 狙い |
+|---|---|---|---|
+| A | 500〜5,000（濃い収支・期待値垢） | 50% | 読まれやすく、相互化しやすい |
+| B | 5,000〜50,000（中堅アカウント） | 30% | 露出と信頼獲得 |
+| C | 10万超（万人アカウント） | 20% | 当たれば大きいが埋もれやすい |
+
+リプ案を出すときはターゲットの tier を分かる範囲で添える。フォロワー数が画面から読めない場合は「不明」と明示し、推測で断定しない。
+
+記録・更新コマンド:
+
+```
+# 送信直後
+npm run reply-log -- --add target_url=<URL> tier=A/B/C archetype=<型> note=<メモ>
+
+# 後日、反応が分かったら
+npm run reply-log -- --update target_url=<URL> got_reply=1 profile_visit=1 follow=0
+
+# 比率の実績を確認（累計 or 直近N日）
+npm run reply-mix
+npm run reply-mix -- --days 7
+```

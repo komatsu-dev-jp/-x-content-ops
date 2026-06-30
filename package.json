@@ -11,6 +11,8 @@
     "schedule": "python3 scripts/export_schedule_csv.py",
     "tweet": "python3 scripts/fetch_tweet.py",
     "today": "python3 scripts/daily_tracker.py",
-    "notify": "python3 scripts/notify_slack.py"
+    "notify": "python3 scripts/notify_slack.py",
+    "reply-log": "python3 scripts/log_reply.py",
+    "reply-mix": "python3 scripts/reply_mix_report.py"
   }
 }
