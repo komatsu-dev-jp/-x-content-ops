@@ -62,15 +62,24 @@ def save_rows(rows):
             w.writerow({c: r.get(c, "") for c in COLS})
 
 
-def add(argv):
-    data = parse_pairs(argv, "--add")
+def append_row(record_date, target_url, tier="", archetype="", note=""):
+    """他スクリプト（daily_tracker.py の --done reply）からも呼べる共通追記処理。"""
+    if tier and tier not in VALID_TIERS:
+        sys.exit("tier は A/B/C のいずれか（500-5000=A, 5000-50000=B, 10万超=C）")
     row = {c: "" for c in COLS}
-    row.update({"date": today()})
-    row.update(data)
+    row.update({"date": record_date, "target_url": target_url, "tier": tier,
+                "archetype": archetype, "note": note})
     rows = load_rows()
     rows.append(row)
     save_rows(rows)
-    tier_note = f"（tier未設定。後で --update で埋められます）" if not row.get("tier") else ""
+    return row
+
+
+def add(argv):
+    data = parse_pairs(argv, "--add")
+    row = append_row(today(), data["target_url"], data.get("tier", ""),
+                      data.get("archetype", ""), data.get("note", ""))
+    tier_note = "（tier未設定。後で --update で埋められます）" if not row.get("tier") else ""
     print(f"✅ 記録: {row['target_url']} tier={row.get('tier') or '?'} {tier_note}")
 
 
