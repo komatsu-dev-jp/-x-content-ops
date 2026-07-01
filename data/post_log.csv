@@ -2,7 +2,7 @@ date,post_id,status,theme,post_type,hook_type,has_image,image_type,has_video,lin
 2026-06-25,week01-p1,posted,判断ミス,問題提起型,memory_bias,FALSE,none,FALSE,FALSE,2,morning,thu,102,昨日出ていた台に今日も座ってしまう,soft,107,2,1,0,0,,,0,1,0,0.0093,0.0000,0.0000,0.0000,0.0000,,0.09,詳細クリック1
 2026-06-26,week01-p2,posted,撤退判断,あるある型,relatable,FALSE,none,FALSE,FALSE,0,noon,fri,91,これやりがち,none,83,1,0,0,0,,,1,0,,0.0000,0.0000,0.0000,0.0120,,,0.36,
 2026-06-28,week01-p3,posted,継続設計,失敗告白型,confession,FALSE,none,FALSE,FALSE,0,morning,sat,100,記録アプリを自分で作ってるのに入力をサボった,soft,53,0,0,0,0,,,0,0,,0.0000,0.0000,0.0000,0.0000,,,0.00,
-2026-06-29,week01-p4,posted,UI,UIスクショ型,pain_hook,TRUE,screenshot,FALSE,FALSE,1,night,mon,90,入力が面倒だと楽な判断を選ぶ,soft,,,,,,,,,,,,,,,,,,
+2026-06-29,week01-p4,posted,UI,UIスクショ型,pain_hook,TRUE,screenshot,FALSE,FALSE,1,night,mon,90,入力が面倒だと楽な判断を選ぶ,soft,69,10,4,0,0,,,1,4,,0.0580,0.0000,0.0000,0.0145,,,1.01,
 2026-06-30,week01-p5,posted,β募集,β募集型,target_call,FALSE,none,FALSE,FALSE,0,night,tue,96,記録で見直したい人へ,beta,,,,,,,,,,,,,,,,,,
 2026-07-02,week02-p1,scheduled,記憶バイアス,問題提起型,memory_bias,FALSE,none,FALSE,FALSE,2,night,thu,105,勝った日の記憶ってなぜか鮮明に残る,soft,,,,,,,,,,,,,,,,,,
 2026-07-03,week02-p2,scheduled,台選び,あるある型,relatable,FALSE,none,FALSE,FALSE,0,morning,fri,88,これ自分もやってた,none,,,,,,,,,,,,,,,,,,
@@ -12,3 +12,4 @@ date,post_id,status,theme,post_type,hook_type,has_image,image_type,has_video,lin
 2026-06-23,week00-p1,posted,撤退判断,失敗告白型,confession,FALSE,,,,,,tue,,,,61,0,0,0,0,,,0,,0,0.0000,0.0000,0.0000,0.0000,0.0000,,0.00,自己決めライン守れず
 2026-06-26,week01-p2b,posted,台選び,,,,,,,,,,,30回転で回ってたから本命にした。,,160,0,0,0,0,,,0,0,,0.0000,0.0000,0.0000,0.0000,,,0.00,post_log.csv未記録だった投稿。スクショから追加。
 2026-06-29,week01-p4b,posted,記憶バイアス,,,,,,,,,,,パチンコの収支、記憶だと「だいたいトントン」なんだよな。,,77,2,2,0,0,,,0,0,,0.0260,0.0000,0.0000,0.0000,,,0.26,post_log.csv未記録だった投稿。スクショから追加。
+2026-06-20,week00-p0,posted,判断ミス,問題提起型,,,,,,,,,,パチンコで負ける原因は、回らない台だけじゃない。,,277,0,4,1,0,,,0,,,0.0144,0.0036,0.0000,0.0000,,,0.22,固定ポスト。post_log.csv未記録だった初回投稿をプロフィール画面から追加。
