@@ -4,7 +4,7 @@ date,post_id,status,theme,post_type,hook_type,has_image,image_type,has_video,lin
 2026-06-28,week01-p3,posted,継続設計,失敗告白型,confession,FALSE,none,FALSE,FALSE,0,morning,sat,100,記録アプリを自分で作ってるのに入力をサボった,soft,53,0,0,0,0,,,0,0,,0.0000,0.0000,0.0000,0.0000,,,0.00,
 2026-06-29,week01-p4,posted,UI,UIスクショ型,pain_hook,TRUE,screenshot,FALSE,FALSE,1,night,mon,90,入力が面倒だと楽な判断を選ぶ,soft,69,10,4,0,0,,,1,4,,0.0580,0.0000,0.0000,0.0145,,,1.01,
 2026-06-30,week01-p5,posted,β募集,β募集型,target_call,FALSE,none,FALSE,FALSE,0,night,tue,96,記録で見直したい人へ,beta,,,,,,,,,,,,,,,,,,
-2026-07-02,week02-p1,scheduled,記憶バイアス,問題提起型,memory_bias,FALSE,none,FALSE,FALSE,2,night,thu,105,勝った日の記憶ってなぜか鮮明に残る,soft,,,,,,,,,,,,,,,,,,
+2026-07-02,week02-p1,posted,記憶バイアス,問題提起型,memory_bias,FALSE,none,FALSE,FALSE,2,night,thu,105,勝った日の記憶ってなぜか鮮明に残る,soft,,,,,,,,,,,,,,,,,,
 2026-07-03,week02-p2,scheduled,台選び,あるある型,relatable,FALSE,none,FALSE,FALSE,0,morning,fri,88,これ自分もやってた,none,,,,,,,,,,,,,,,,,,
 2026-07-04,week02-p3,scheduled,プロダクト思想,失敗告白型,confession,FALSE,none,FALSE,FALSE,0,noon,sat,93,機能を増やしたら自分が一番使わなくなった,soft,,,,,,,,,,,,,,,,,,
 2026-07-06,week02-p4,scheduled,回転率,検証メモ型,proof,FALSE,none,FALSE,FALSE,0,night,mon,81,この台回ってる気がする,soft,,,,,,,,,,,,,,,,,,
