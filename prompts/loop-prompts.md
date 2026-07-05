@@ -61,13 +61,26 @@ npm run weekly の結果（data/post_log.csv）を x-weekly-review で解釈し�
 
 ```
 /goal
-来週分のX投稿カレンダーを「予約できる状態」まで仕上げる。
+来週分のPachiTracker X投稿を「予約できる状態」まで一気に仕上げる。
 
-達成条件:
-- 候補5本が score 90以上 / risk none
-- 各案に曜日・タイムスロット・画像有無が割り当て済み（ab_test_plan.csv 準拠）
-- npm run schedule で予約用CSVが output/ に書き出されている
-達成したら要約を出して終了。公開はしない。
+手順:
+1. （事前に今週のアナリティクスを渡してあること）npm run weekly を実行し x-weekly-review で解釈。勝ち仮説を1つだけ出し ab_test_plan.csv に反映
+2. npm run backlog -- --status で未使用ネタを確認。来週の投稿は「まず backlog の未使用から引く」
+3. 引いたネタと仮説・型×時間帯ローテに沿って x-growth-company で投稿を5本生成
+4. 各案を x-score-post と x-risk-check にかけ、score90以上 / risk none になるまで直す
+5. 使ったネタは npm run backlog -- --consume "idea前方一致" post_id=... で投稿済にする
+6. 未使用が10件を切っていたら x-idea-harvest で15件まで補充
+7. npm run schedule で予約用CSVを output/ に書き出す
+8. data/post_log.csv に追記した該当post_id 5件を、Notion「X投稿スケジュール｜PachiTracker」DBにも反映する
+   - Notion DB: https://app.notion.com/p/76ba18eef66940b49aed2cba44bb5662?v=037b59d3fc794e98b1d8f49968dc4185
+   - 1 post_id = 1ページ。投稿タイトルは `{post_id} {型短縮}｜{フック要約}`（例: week03-p1 問題提起｜撤退ラインの怖さ）
+   - プロパティ: post_id / 投稿日 / 投稿型 / テーマ / フック1行目 / 投稿テキスト（改行は`<br>`）/ ハッシュタグ / 文字数 / 目的 / 評価点数 / 評価コメント / ステータス（新規は「未着手」）/ 使用画像（該当時）/ 備考（想定時間帯・A/B文脈・backlog出典）
+   - 「投稿時間A」は 20:00/21:30/23:00 の固定選択肢のみ（新規オプション追加不可）。朝・昼枠など合わない場合は空欄にし、実際の想定時刻は備考に書く
+   - ページ本文（content）に「## 返信テンプレ」として返信案を2つ入れる
+   - すでに投稿済み（posted）だが未反映の実績（インプレッション数・いいね数等）があれば、この機会に既存ページも更新する
+
+達成条件: 5本が score90↑ / risk none / 曜日・スロット割当済み / CSV出力済み / backlog消化と補充済み / Notion DBに5件反映済み
+達成したら要約を出して停止。公開・コミット・Notion以外への外部送信は人間の承認なしに行わない。
 ```
 
 ---
