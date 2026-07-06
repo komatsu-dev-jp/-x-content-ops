@@ -4,7 +4,7 @@
 （出典: ループエンジニアリングの memory システムを PachiTracker 運用に移植）
 
 - [リプ周り・返信の学習](feedback_reply_outreach.md) — パチンコ用語/当たりの良し悪しを事実確認してから返信。嘆きにおめでとう厳禁。閉じた会話は無理に開けない。
-- [投稿フォーマットの学習](feedback_post_format.md) — 型・禁止表現・positioning の逸脱メモ（正典は prompts/）。
+- [投稿フォーマットの学習](feedback_post_format.md) — 型・禁止表現・positioning の逸脱メモ（正典は prompts/）。警句調オチの多用でAI臭くなる問題も含む。
 - [検証・事実確認の学習](feedback_verification.md) — それっぽい穴埋め禁止。曖昧なら「未確認」と書くか本人に聞く。
 
 ## 運用ルール

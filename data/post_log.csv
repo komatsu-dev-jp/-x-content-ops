@@ -12,8 +12,8 @@ date,post_id,status,theme,post_type,hook_type,has_image,image_type,has_video,lin
 2026-06-23,week00-p1,posted,撤退判断,失敗告白型,confession,FALSE,,,,,,tue,,,,61,0,0,0,0,,,0,,0,0.0000,0.0000,0.0000,0.0000,0.0000,,0.00,自己決めライン守れず
 2026-06-26,week01-p2b,posted,台選び,,,,,,,,,,,30回転で回ってたから本命にした。,,160,0,0,0,0,,,0,0,,0.0000,0.0000,0.0000,0.0000,,,0.00,post_log.csv未記録だった投稿。スクショから追加。
 2026-06-29,week01-p4b,posted,記憶バイアス,,,,,,,,,,,パチンコの収支、記憶だと「だいたいトントン」なんだよな。,,121,3,2,0,0,,,0,0,,0.0165,0.0000,0.0000,0.0000,,,0.17,post_log.csv未記録だった投稿。スクショから追加。
-2026-07-09,week03-p1,scheduled,撤退判断,問題提起型,loss_aversion,FALSE,none,FALSE,FALSE,2,noon,thu,106,撤退の判断を決めずに打ち始める怖さ,soft,,,,,,,,,,,,,,,,,,
-2026-07-10,week03-p2,scheduled,撤退判断,あるある型,relatable,FALSE,none,FALSE,FALSE,0,night,fri,108,ヤメどきを逃すあるある,none,,,,,,,,,,,,,,,,,,
-2026-07-11,week03-p3,scheduled,続行判断,失敗告白型,confession,FALSE,none,FALSE,FALSE,0,night,sat,83,前半の記憶だけで続行を誤った,soft,,,,,,,,,,,,,,,,,,
-2026-07-13,week03-p4,scheduled,UI,UIスクショ型,pain_hook,TRUE,screenshot,FALSE,FALSE,1,morning,mon,103,記録が面倒だと続ける前にやめてしまう,soft,,,,,,,,,,,,,,,,,,
-2026-07-14,week03-p5,scheduled,β募集,β募集型,target_call,FALSE,none,FALSE,FALSE,0,morning,tue,80,感覚じゃなく記録で見直したい人へ,beta,,,,,,,,,,,,,,,,,,
+2026-07-09,week03-p1,scheduled,撤退判断,問題提起型,loss_aversion,FALSE,none,FALSE,FALSE,2,noon,thu,112,撤退の判断を決めてても座ると続けてしまう,soft,,,,,,,,,,,,,,,,,,
+2026-07-10,week03-p2,scheduled,撤退判断,あるある型,relatable,FALSE,none,FALSE,FALSE,0,night,fri,123,ヤメどきを逃すあるある,none,,,,,,,,,,,,,,,,,,
+2026-07-11,week03-p3,scheduled,続行判断,失敗告白型,confession,FALSE,none,FALSE,FALSE,0,night,sat,96,前半の記憶だけで続行の判断を誤った,soft,,,,,,,,,,,,,,,,,,
+2026-07-13,week03-p4,scheduled,UI,UIスクショ型,pain_hook,TRUE,screenshot,FALSE,FALSE,1,morning,mon,96,記録つけるの面倒だと普通にやめる,soft,,,,,,,,,,,,,,,,,,
+2026-07-14,week03-p5,scheduled,β募集,β募集型,target_call,FALSE,none,FALSE,FALSE,0,morning,tue,109,感覚じゃなくて記録で見直したい人へ,beta,,,,,,,,,,,,,,,,,,

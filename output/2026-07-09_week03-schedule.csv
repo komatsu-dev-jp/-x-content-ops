@@ -2,8 +2,8 @@ date,suggested_time,post_id,post_type,time_slot,has_image,image_type,status,firs
 2026-07-04,12:30,week02-p3,失敗告白型,noon,FALSE,none,scheduled,機能を増やしたら自分が一番使わなくなった
 2026-07-06,21:30,week02-p4,検証メモ型,night,FALSE,none,scheduled,この台回ってる気がする
 2026-07-07,12:30,week02-p5,UIスクショ型,noon,TRUE,screenshot,scheduled,続行か撤退か
-2026-07-09,12:30,week03-p1,問題提起型,noon,FALSE,none,scheduled,撤退の判断を決めずに打ち始める怖さ
+2026-07-09,12:30,week03-p1,問題提起型,noon,FALSE,none,scheduled,撤退の判断を決めてても座ると続けてしまう
 2026-07-10,21:30,week03-p2,あるある型,night,FALSE,none,scheduled,ヤメどきを逃すあるある
-2026-07-11,21:30,week03-p3,失敗告白型,night,FALSE,none,scheduled,前半の記憶だけで続行を誤った
-2026-07-13,08:30,week03-p4,UIスクショ型,morning,TRUE,screenshot,scheduled,記録が面倒だと続ける前にやめてしまう
-2026-07-14,08:30,week03-p5,β募集型,morning,FALSE,none,scheduled,感覚じゃなく記録で見直したい人へ
+2026-07-11,21:30,week03-p3,失敗告白型,night,FALSE,none,scheduled,前半の記憶だけで続行の判断を誤った
+2026-07-13,08:30,week03-p4,UIスクショ型,morning,TRUE,screenshot,scheduled,記録つけるの面倒だと普通にやめる
+2026-07-14,08:30,week03-p5,β募集型,morning,FALSE,none,scheduled,感覚じゃなくて記録で見直したい人へ
