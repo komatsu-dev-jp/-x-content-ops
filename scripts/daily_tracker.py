@@ -4,9 +4,13 @@
 自動操作はしない。人間が手で投稿/リプ/いいね/フォローしたあとに 1 カウントするだけの
 後追いツール。追加課金なし（ローカルCSV/JSONのみ）。
 
-タスク定義: data/daily_goals.json（task ごとに goal / label / source）
+タスク定義: data/daily_goals.json（task ごとに goal / min_goal / label / source）
   - source=post_log : data/post_log.csv の status=posted & 本日分を自動カウント
   - source=manual   : data/daily_activity_log.csv に --done で記録した本日分をカウント
+  - goal=0          : ノルマなし・記録のみ（フォロー/いいね/β興味/投稿はこちら。
+                       量より継続を優先し、機械的な日次ノルマにしない）
+  - min_goal        : 満点ライン(goal)未達でも「最低ライン」を達成しているか判定する下限。
+                       goal>min_goal のタスク（リプ周り）だけ意味を持つ。継続できる最低量の目安。
 
 使い方:
   python3 scripts/daily_tracker.py                          # 本日の全タスク進捗を表示
@@ -31,11 +35,11 @@ TIER_TARGET = {"A": 50, "B": 30, "C": 20}
 TIER_LABEL = {"A": "A 500〜5k", "B": "B 5k〜50k", "C": "C 10万+"}
 JST = timezone(timedelta(hours=9))
 DEFAULT_GOALS = {
-    "post":   {"goal": 1,  "label": "投稿",     "source": "post_log"},
-    "reply":  {"goal": 5,  "label": "リプ周り", "source": "manual"},
-    "like":   {"goal": 10, "label": "いいね",   "source": "manual"},
-    "follow": {"goal": 3,  "label": "フォロー", "source": "manual"},
-    "beta_interest": {"goal": 0, "label": "β興味",   "source": "manual"},
+    "reply":  {"goal": 5, "min_goal": 3, "label": "リプ周り", "source": "manual"},
+    "like":   {"goal": 0, "min_goal": 0, "label": "いいね",   "source": "manual"},
+    "follow": {"goal": 0, "min_goal": 0, "label": "フォロー", "source": "manual"},
+    "post":   {"goal": 0, "min_goal": 0, "label": "投稿",     "source": "post_log"},
+    "beta_interest": {"goal": 0, "min_goal": 0, "label": "β興味", "source": "manual"},
 }
 
 
@@ -135,28 +139,41 @@ def bar(done, goal):
     return "▓" * filled + "░" * max(goal - filled, 0)
 
 
-def line(label, done, goal, label_w):
+def line(label, done, goal, label_w, min_goal=0):
     lbl = pad(label, label_w)
     if goal <= 0:
         return f"{lbl}  {done}件（ノルマなし・記録のみ）"
     if done >= goal:
         extra = f"（+{done - goal}）" if done > goal else ""
-        return f"{lbl}  {done}/{goal}  {bar(done, goal)}  ✅ 達成{extra}"
+        return f"{lbl}  {done}/{goal}  {bar(done, goal)}  ✅ 満点ライン達成{extra}"
+    if min_goal > 0 and done >= min_goal:
+        return f"{lbl}  {done}/{goal}  {bar(done, goal)}  ✅最低ライン達成・満点まであと{goal - done}"
+    if min_goal > 0:
+        return f"{lbl}  {done}/{goal}  {bar(done, goal)}  最低ライン({min_goal})まであと{min_goal - done}"
     return f"{lbl}  {done}/{goal}  {bar(done, goal)}  あと{goal - done}件"
 
 
 def compute_status():
-    """進捗を構造化して返す（表示・Slack通知の共通ソース）。"""
+    """進捗を構造化して返す（表示・Slack通知の共通ソース）。
+    最低ライン(min_goal)と満点ライン(goal)を別々に集計する。"""
     goals = load_goals()
-    tasks, done_total, goal_total = [], 0, 0
+    tasks, done_total, goal_total, min_done, min_total = [], 0, 0, 0, 0
     for task, spec in goals.items():
         goal = int(spec.get("goal") or 0)
+        min_goal = int(spec.get("min_goal") or 0)
         done = count_today(task, spec)
-        tasks.append({"label": spec.get("label", task), "done": done, "goal": goal})
+        tasks.append({"label": spec.get("label", task), "done": done, "goal": goal, "min_goal": min_goal})
         if goal > 0:
             done_total += min(done, goal)
             goal_total += goal
-    return {"date": today(), "tasks": tasks, "done_total": done_total, "goal_total": goal_total}
+        if min_goal > 0:
+            min_done += min(done, min_goal)
+            min_total += min_goal
+    return {
+        "date": today(), "tasks": tasks,
+        "done_total": done_total, "goal_total": goal_total,
+        "min_done": min_done, "min_total": min_total,
+    }
 
 
 def show_status():
@@ -165,14 +182,18 @@ def show_status():
     label_w = max((disp_width(t["label"]) for t in st["tasks"]), default=4)
     print(f"📅 本日のタスク ({st['date']})\n")
     for task, t in zip(goals, st["tasks"]):
-        print(line(t["label"], t["done"], t["goal"], label_w))
+        print(line(t["label"], t["done"], t["goal"], label_w, t.get("min_goal", 0)))
         if task == "reply":
             tb = tier_breakdown_line(t["goal"])
             if tb:
                 print(tb)
+    min_done, min_total = st["min_done"], st["min_total"]
+    if min_total > 0:
+        min_mark = "✅ 最低ライン達成" if min_done >= min_total else f"あと{min_total - min_done}件"
+        print(f"\n最低ライン {min_done}/{min_total}  {min_mark}")
     done_total, goal_total = st["done_total"], st["goal_total"]
-    print(f"\n合計 {done_total}/{goal_total} 完了", end="")
-    print(" 🎉 本日のノルマ達成！" if done_total >= goal_total and goal_total > 0
+    print(f"満点ライン {done_total}/{goal_total}", end="")
+    print(" 🎉 本日の満点ライン達成！" if done_total >= goal_total and goal_total > 0
           else f"（残り {goal_total - done_total} 件）")
 
 

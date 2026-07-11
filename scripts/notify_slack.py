@@ -51,11 +51,16 @@ def build_message(st):
             lines.append(f"• {t['label']} {t['done']}/{t['goal']} ✅")
         else:
             lines.append(f"• {t['label']} {t['done']}/{t['goal']}（あと{t['goal'] - t['done']}件）")
+    min_total = st.get("min_total", 0)
+    if min_total > 0:
+        min_done = st.get("min_done", 0)
+        mark = "✅" if min_done >= min_total else f"あと{min_total - min_done}件"
+        lines.append(f"*最低ライン {min_done}/{min_total} {mark}*")
     remain = st["goal_total"] - st["done_total"]
     if remain <= 0 and st["goal_total"] > 0:
-        lines.append(f"*合計 {st['done_total']}/{st['goal_total']} 🎉 本日達成！*")
+        lines.append(f"*満点ライン {st['done_total']}/{st['goal_total']} 🎉 本日達成！*")
     else:
-        lines.append(f"*合計 {st['done_total']}/{st['goal_total']} — 残り{remain}件*")
+        lines.append(f"*満点ライン {st['done_total']}/{st['goal_total']} — 残り{remain}件*")
     return "\n".join(lines)
 
 

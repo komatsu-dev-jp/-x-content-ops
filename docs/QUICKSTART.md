@@ -100,7 +100,7 @@ npm run weekly          # セグメント別＋型×時間帯の勝ちスロッ�
 | `npm run weekly` | 週次レビュー（縮小率ランキング） |
 | `npm run schedule` | 予約投稿用ワークシートCSV書き出し |
 | `npm run tweet -- <URL>` | リプ周り用：ターゲット投稿の本文取得（best-effort） |
-| `npm run today` | 本日の全タスク進捗を表示（投稿/リプ/いいね/フォロー、あと何件） |
+| `npm run today` | 本日の進捗を表示（リプ周りは最低ライン3/満点ライン5。他はノルマなし・記録のみ） |
 | `npm run today -- --done reply target_url=...` | 手で送ったリプを1件カウント |
 | `npm run today -- --done like count=5` | いいねを5件カウント |
 | `npm run today -- --done follow target_url=...` | フォローを1件カウント |
