@@ -12,6 +12,7 @@ Read:
 
 - prompts/pachitracker-positioning.md（読者の痛みリスト）
 - prompts/post-patterns.md（投稿型 / Hook Bank）
+- prompts/angle-rotation.md（角度の定義とローテーションルール）
 - data/idea_backlog.csv（既存ネタ。重複チェック用）
 - data/post_log.csv（直近の theme / hook_type。角度の偏りチェック用）
 
@@ -19,8 +20,7 @@ Read:
 
 1. 読者の痛み × 投稿型から新しいネタを 5〜10 個出す。
 2. **重複排除**: idea_backlog.csv の既存 idea と意味が近いものは出さない（言い換え重複もNG）。
-3. **角度の分散**: 直近の投稿/ネタが特定角度（記憶のズレ・判断ログ等）に偏っていれば、
-   別角度（入力の面倒さ / 続行理由の変化 / 店・台選び / UI思想）を優先する。
+3. **角度の分散**: `prompts/angle-rotation.md` の角度から、直近の投稿/ネタが偏っている角度を避けて優先度を決める。
 4. 各ネタに reader_pain と post_type を紐づける。
 
 ## 出力

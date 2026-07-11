@@ -22,10 +22,7 @@ Check for:
 - internal algorithm leakage
 - unreleased feature overstatement
 - screenshot rights issue
-- 未実装断定（未提供の機能を「試せます／できます」と断定 → 「試してもらう予定です」）
-- オカルト・迷信（「据え置き」「○時から出る」など店側挙動を事実化 → 記憶/印象として表現）
-- 専門語の壁（「ボーダー」等を初心者に伝わる日常語へ言い換え）
-- UI動作の誇張（タップ数など実装と一致しない断定）
+- `prompts/banned-patterns.md` の「注意表現 A〜E」（未実装断定 / オカルト・迷信 / 専門語の壁 / UI動作の誇張 / リンク主役）
 
 Return:
 

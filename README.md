@@ -73,7 +73,7 @@ CLAUDE.md / AGENTS.md    実行憲法（Claude Code / Codex が常に従うル�
 .claude/agents/          Claude Code用サブエージェント
 .claude/skills/          Claude Code用Skill
 .codex/agents/           Codex用サブエージェント定義
-.codex/skills/           Codex用Skill
+.codex/skills/           Codex用Skill（実体は .claude/skills/ へのsymlink。正典は.claude側1箇所）
 prompts/                 投稿型、採点、禁止表現、ポジショニング、/loopテンプレ
 memory/                  学習ループ（同じ指摘を2回受けたら追記し二度と繰り返さない）
 docs/                    運用設計、コスト方針、リスク方針、ゴール・検証シート

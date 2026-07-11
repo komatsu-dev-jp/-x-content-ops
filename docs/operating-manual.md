@@ -2,7 +2,7 @@
 
 ## Daily Workflow
 
-1. `data/idea_backlog.csv` にネタを追加
+1. `data/idea_backlog.csv` にネタを追加（`x-idea-harvest` Skillで生成可）
 2. `x-growth-company` Skillで投稿候補を生成
 3. `x-risk-check` Skillでリスク判定
 4. `x-score-post` Skillで採点
@@ -10,14 +10,16 @@
 6. Xに手動投稿または予約投稿
 7. 24〜48時間後に `data/post_log.csv` へ実績入力
    - 手動編集でも可。`python3 scripts/log_post.py --set post_id=... status=posted impressions=... profile_visits=... follows_gained=...` で列ズレなく追記/更新でき、各rate列と quality_score を自動計算する（追加課金なしのローカル処理）
+8. リプ周りを送った場合、翌日以降に反応が分かれば `python3 scripts/log_reply.py --update target_url=... got_reply=1 profile_visit=1 follow=0` で記録（`data/reply_outreach_log.csv`）
 
 ## Weekly Workflow
 
 1. `scripts/weekly_review.py` を実行
-2. 勝ち投稿と負け投稿を比較
-3. `prompts/hook_examples.md` を更新
-4. `prompts/banned-patterns.md` を更新
-5. 次週のA/B変数を1つだけ決める
+2. `scripts/reply_mix_report.py` でリプ周りのtier構成と反応率を確認
+3. 勝ち投稿と負け投稿を比較
+4. `prompts/post-patterns.md` を更新（勝ちフックの追加）
+5. `prompts/banned-patterns.md` を更新
+6. 次週のA/B変数を1つだけ決める
 
 ## Monthly Workflow
 

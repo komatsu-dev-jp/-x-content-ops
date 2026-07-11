@@ -72,7 +72,7 @@ description: |
 - 必要なら本文の事実確認を
 ```
 
-## 投稿後（任意・進捗カウント）
+## 投稿後（送信件数のカウント）
 
 人間が選んだ返信を手で送信したら、その1件を本日のタスクに数える:
 
@@ -84,7 +84,22 @@ npm run today -- --done reply target_url=<相手投稿URL> note=<使った型な
 いいね・フォローも同様（`--done like count=5` / `--done follow target_url=...`）。
 進捗だけ見たいときは `npm run today`。**送信は人間。スクリプトは数えるだけで投稿しない。**
 
-返信が返ってきたか等の成果は、後日 `data/reply_outreach_log.csv` に記録して週次分析に使う（任意・日次カウントとは別）。
+## 反応の記録（必須・週次分析の前提）
+
+送信直後、まず `data/reply_outreach_log.csv` に1件記録する:
+
+```
+python3 scripts/log_reply.py --add target_url=<相手投稿URL> archetype=<使った型> note=<狙い>
+```
+
+**翌日以降、反応が分かった時点で必ず更新する**（ここが抜けると週次で「一番効いているチャネルが測れない」状態になる）:
+
+```
+python3 scripts/log_reply.py --update target_url=<相手投稿URL> got_reply=1 profile_visit=1 follow=0
+```
+
+反応がなかった場合も `got_reply=0` 等で明示的に更新する（空欄のままだと未計測扱いになり週次から漏れる）。
+`scripts/reply_mix_report.py`（`npm run reply-mix`）でtier構成、`scripts/weekly_review.py`（`npm run weekly`）で型別（archetype別）の got_reply率・profile_visit率・follow率を確認できる。
 
 ## Hard Constraints
 

@@ -11,17 +11,18 @@ Read:
 - prompts/scoring-rubric.md
 - prompts/banned-patterns.md
 
-Score the post out of 100.
+Score the post out of 100. 配点・判定閾値は `prompts/scoring-rubric.md`（Pre-post Score / Decision）に従う。
+rubric を変更した場合はここではなく scoring-rubric.md を直す。
 
-Breakdown:
+Breakdown keys（rubric の項目に対応）:
 
-- first_line_hook: 20
-- pain_specificity: 20
-- pachitracker_connection: 15
-- profile_visit_potential: 15
-- low_sales_smell: 10
-- risk_safety: 10
-- readability: 10
+- first_line_hook
+- pain_specificity
+- pachitracker_connection
+- profile_visit_potential
+- low_sales_smell
+- risk_safety
+- readability
 
 Return:
 

@@ -46,6 +46,19 @@ shrunk_rate = (events + K * prior) / (impressions + K)
 
 `scripts/weekly_review.py` がこの縮小率で profile_visit を順位付けし、`impressions<500` を `(低n)` と明示する。
 
+### Phase 0 例外（平均impressionsが500未満の間）
+
+アカウント初期はほぼ全投稿が imp<500 になり、上記ルールをそのまま適用すると
+縮小率が prior に吸着して差が消え、週次レビューが常に「保留」しか言えなくなる。
+`posted行のimpressions平均 < 500` の間は、以下の Phase 0 モードで判断する。
+
+- 縮小率ランキングは**参考出力**にとどめ、根拠にしない。
+- 代わりに**絶対数**（profile_visits・replies・follows_gained・詳細クリック数）と、
+  **定性シグナル**（どの1行目・角度で反応が来たか、リプ欄の内容）で仮説を立てる。
+- 「勝ち仮説は週1つだけ」の原則は変えない。絶対数ベースでも仮説の粒度は保つ。
+- posted行のimpressions平均が500以上に育ったら、自動的に通常ルール（縮小率ランキング）へ戻る。
+  （`scripts/weekly_review.py` が平均impressionsで自動判定・表示切替する）
+
 ## Caution
 
 Raw impressions alone are not success.
