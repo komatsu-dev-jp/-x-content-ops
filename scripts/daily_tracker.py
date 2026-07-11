@@ -19,7 +19,7 @@
 import csv
 import json
 import sys
-from datetime import date
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 POST_LOG = Path("data/post_log.csv")
@@ -29,16 +29,19 @@ GOALS = Path("data/daily_goals.json")
 ACT_COLS = ["date", "task", "count", "target_url", "note"]
 TIER_TARGET = {"A": 50, "B": 30, "C": 20}
 TIER_LABEL = {"A": "A 500〜5k", "B": "B 5k〜50k", "C": "C 10万+"}
+JST = timezone(timedelta(hours=9))
 DEFAULT_GOALS = {
     "post":   {"goal": 1,  "label": "投稿",     "source": "post_log"},
     "reply":  {"goal": 5,  "label": "リプ周り", "source": "manual"},
     "like":   {"goal": 10, "label": "いいね",   "source": "manual"},
     "follow": {"goal": 3,  "label": "フォロー", "source": "manual"},
+    "beta_interest": {"goal": 0, "label": "β興味",   "source": "manual"},
 }
 
 
 def today():
-    return date.today().isoformat()
+    """JST基準の日付。サーバーがUTCで動いていても深夜0-9時台の記録が前日にならないようにする。"""
+    return datetime.now(JST).date().isoformat()
 
 
 def load_goals():
@@ -135,7 +138,7 @@ def bar(done, goal):
 def line(label, done, goal, label_w):
     lbl = pad(label, label_w)
     if goal <= 0:
-        return f"{lbl}  {done}/{goal}"
+        return f"{lbl}  {done}件（ノルマなし・記録のみ）"
     if done >= goal:
         extra = f"（+{done - goal}）" if done > goal else ""
         return f"{lbl}  {done}/{goal}  {bar(done, goal)}  ✅ 達成{extra}"
@@ -150,8 +153,9 @@ def compute_status():
         goal = int(spec.get("goal") or 0)
         done = count_today(task, spec)
         tasks.append({"label": spec.get("label", task), "done": done, "goal": goal})
-        done_total += min(done, goal)
-        goal_total += goal
+        if goal > 0:
+            done_total += min(done, goal)
+            goal_total += goal
     return {"date": today(), "tasks": tasks, "done_total": done_total, "goal_total": goal_total}
 
 

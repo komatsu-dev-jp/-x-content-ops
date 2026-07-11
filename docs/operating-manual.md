@@ -7,10 +7,13 @@
 3. `x-risk-check` Skillでリスク判定
 4. `x-score-post` Skillで採点
 5. 人間が最終判断
-6. Xに手動投稿または予約投稿
-7. 24〜48時間後に `data/post_log.csv` へ実績入力
-   - 手動編集でも可。`python3 scripts/log_post.py --set post_id=... status=posted impressions=... profile_visits=... follows_gained=...` で列ズレなく追記/更新でき、各rate列と quality_score を自動計算する（追加課金なしのローカル処理）
+6. Xに手動投稿または予約投稿したら、**その場で** `status=posted` だけ反映する（数値は空でよい）:
+   `python3 scripts/log_post.py --set post_id=... status=posted`
+   - これをやらないと `npm run today` の「投稿」タスクが永久に未達成表示になる（scheduled のまま実績入力日まで残るため）。
+7. 24〜48時間後、`data/post_log.csv` に実績（impressions等）を追記
+   - `python3 scripts/log_post.py --set post_id=... impressions=... profile_visits=... follows_gained=...` で列ズレなく追記/更新でき、各rate列と quality_score を自動計算する（追加課金なしのローカル処理）
 8. リプ周りを送った場合、翌日以降に反応が分かれば `python3 scripts/log_reply.py --update target_url=... got_reply=1 profile_visit=1 follow=0` で記録（`data/reply_outreach_log.csv`）
+9. リプ・DM等で「β版に興味がある」反応があれば `npm run today -- --done beta_interest target_url=... note=...` で記録（ノルマなし・記録専用。AGENTS.mdのprimary KPI `beta_interest_count` の実データ）
 
 ## Weekly Workflow
 

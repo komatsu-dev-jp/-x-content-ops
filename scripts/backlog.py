@@ -10,8 +10,15 @@
 """
 import csv
 import sys
-from datetime import date
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+
+JST = timezone(timedelta(hours=9))
+
+
+def today():
+    return datetime.now(JST).date().isoformat()
+
 
 BACKLOG = Path("data/idea_backlog.csv")
 BASE_COLS = ["date", "idea", "source", "theme", "reader_pain", "post_type", "priority", "notes"]
@@ -61,7 +68,7 @@ def cmd_consume(rows, needle, post_id):
     target = matches[0]
     target["status"] = "consumed"
     target["consumed_by"] = post_id
-    target["consumed_date"] = date.today().isoformat()
+    target["consumed_date"] = today()
     print(f"consumed: {target['idea']} -> {post_id}")
 
 

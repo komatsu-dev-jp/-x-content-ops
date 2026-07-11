@@ -47,6 +47,7 @@ Use these roles internally:
 6. Growth Analyst: scores expected profile/follow conversion
 7. Reply Concierge: prepares replies that deepen conversation without automation spam
 8. Product Translator: converts UI/features into user pain and benefit
+9. A/B Planner: assigns time slots per `data/ab_test_plan.csv` rotation (mechanical/deterministic — no dedicated subagent file needed, used inline by `x-growth-company`)
 
 ## Cost Guardrails
 
@@ -101,7 +102,7 @@ Primary:
 
 - profile_visit_rate
 - follow_rate
-- beta_interest_count
+- beta_interest_count（`npm run today -- --done beta_interest` で記録。`data/daily_activity_log.csv` に蓄積）
 
 Secondary:
 

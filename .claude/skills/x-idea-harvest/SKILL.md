@@ -28,12 +28,15 @@ Read:
 `data/idea_backlog.csv` のスキーマで追記行を出す:
 
 ```text
-date,idea,source,theme,reader_pain,post_type,priority,notes
+date,idea,source,theme,reader_pain,post_type,priority,notes,status,consumed_by,consumed_date
 ```
 
 - source: observation / confession / product のいずれか
 - priority: high / mid / low（会話化・遷移期待が高いものを high）
 - notes: 角度や狙い（例: Lane A 共感 / 別角度=入力の面倒さ）
+- status/consumed_by/consumed_date: 新規追加時は空欄でよい（`unused`扱い）。
+  `python3 scripts/backlog.py --status` で未消化件数を確認、
+  下書きに使ったら `python3 scripts/backlog.py --consume "<ideaの前方一致>" post_id=<id>` で `consumed` に変更する。
 
 ## Hard Constraints
 

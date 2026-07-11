@@ -127,6 +127,22 @@ def reply_outreach_summary():
               f"{sum(1 for r in gr if flag(r, 'follow'))/m:.0%} |")
 
 
+def beta_interest_summary():
+    """data/daily_activity_log.csv の beta_interest イベントを一覧する（primary KPI）。"""
+    path = Path("data/daily_activity_log.csv")
+    print("\n## β興味の反応（beta_interest_count / primary KPI）")
+    if not path.exists():
+        print("記録がありません。")
+        return
+    rows = [r for r in csv.DictReader(path.open(encoding="utf-8")) if r.get("task") == "beta_interest"]
+    if not rows:
+        print("今週の記録はまだありません（`npm run today -- --done beta_interest ...` で記録）。")
+        return
+    print(f"累計 {len(rows)} 件")
+    for r in rows[-10:]:
+        print(f"- {r.get('date')} | {r.get('target_url') or '(URLなし)'} | {r.get('note') or ''}")
+
+
 def main():
     log = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("data/post_log.csv")
     if not log.exists():
@@ -143,6 +159,7 @@ def main():
         print("\nまだ posted 行がありません。`npm run log` で実績を入れてから再実行してください。")
         print("（最低でも impressions / profile_visits / follows_gained / weekday / image_type を記録）")
         reply_outreach_summary()
+        beta_interest_summary()
         return
 
     for r in posted:
@@ -191,6 +208,7 @@ def main():
     type_x_slot(posted, "profile_visit_rate")
 
     reply_outreach_summary()
+    beta_interest_summary()
 
     print("\n## 次週の仮説（1つだけ決める）")
     print("```text")
