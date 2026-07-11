@@ -101,6 +101,7 @@ npm run weekly          # セグメント別＋型×時間帯の勝ちスロッ�
 | `npm run schedule` | 予約投稿用ワークシートCSV書き出し |
 | `npm run tweet -- <URL>` | リプ周り用：ターゲット投稿の本文取得（best-effort） |
 | `npm run today` | 本日の進捗を表示（リプ周りは最低ライン3/満点ライン5。他はノルマなし・記録のみ） |
+| `python3 scripts/daily_tracker.py --done reply --batch <<'EOF' ...` | **推奨**：1日の終わりにURLをまとめて記録（1行1件、摩擦を減らして記録漏れを防ぐ） |
 | `npm run today -- --done reply target_url=...` | 手で送ったリプを1件カウント |
 | `npm run today -- --done like count=5` | いいねを5件カウント |
 | `npm run today -- --done follow target_url=...` | フォローを1件カウント |

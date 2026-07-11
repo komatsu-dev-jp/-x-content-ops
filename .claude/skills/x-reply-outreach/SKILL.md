@@ -74,7 +74,22 @@ description: |
 
 ## 投稿後（送信件数のカウント）
 
-人間が選んだ返信を手で送信したら、その1件を本日のタスクに数える:
+**推奨: 1日の終わりにまとめて記録する。** リプを打つたびにコマンドを打つのは摩擦が大きく、
+結局記録が止まって週次分析ができなくなる（実際に発生した失敗パターン）。
+日中は送ったリプのURLをメモアプリ等に貼っておくだけにして、寝る前に1回でまとめて流し込む:
+
+```
+python3 scripts/daily_tracker.py --done reply --batch <<'EOF'
+https://x.com/foo/status/123|狭い質問|嘆きに共感
+https://x.com/bar/status/456|同意+一歩
+https://x.com/baz/status/789
+EOF
+```
+
+1行1件、`target_url[|archetype[|note]]` 形式（archetype/noteは省略可）。
+`data/daily_activity_log.csv` と `data/reply_outreach_log.csv` の両方に一括反映される。
+
+その場で1件だけ記録したい場合は従来通り:
 
 ```
 npm run today -- --done reply target_url=<相手投稿URL> note=<使った型など>

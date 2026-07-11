@@ -209,11 +209,58 @@ def maybe_notify(argv):
         print(f"(Slack通知スキップ: {e})")
 
 
+def append_activity_row(record_date, task, count="1", target_url="", note=""):
+    row = {c: "" for c in ACT_COLS}
+    row.update({"date": record_date, "task": task, "count": count,
+                "target_url": target_url, "note": note})
+    write_header = not ACTIVITY_LOG.exists()
+    with ACTIVITY_LOG.open("a", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=ACT_COLS)
+        if write_header:
+            w.writeheader()
+        w.writerow(row)
+
+
+def done_task_batch_reply(record_date):
+    """1日の終わりにまとめてリプ周りを記録する（--batch）。
+
+    リプを打つたびにコマンドを打つのは摩擦が大きく忘れがちなので、日中はメモアプリ等に
+    URLを貼るだけにして、寝る前に1回だけまとめて流し込む運用を想定。
+    stdinから1行1件、`target_url[|archetype[|note]]` 形式で読む（archetype/noteは省略可）。
+    """
+    lines = [ln.strip() for ln in sys.stdin if ln.strip()]
+    if not lines:
+        sys.exit("stdinが空です。1行1件、target_url[|archetype[|note]] 形式で流し込んでください。\n"
+                  "例:\n  python3 scripts/daily_tracker.py --done reply --batch <<'EOF'\n"
+                  "  https://x.com/foo/status/1|狭い質問|嘆きに共感\n"
+                  "  https://x.com/bar/status/2\n  EOF")
+
+    sys.path.insert(0, str(Path(__file__).parent))
+    import log_reply
+
+    count = 0
+    for ln in lines:
+        parts = [p.strip() for p in ln.split("|")]
+        target_url = parts[0]
+        archetype = parts[1] if len(parts) > 1 else ""
+        note = parts[2] if len(parts) > 2 else ""
+        if not target_url:
+            continue
+        append_activity_row(record_date, "reply", target_url=target_url, note=note)
+        log_reply.append_row(record_date, target_url, "", archetype, note)
+        count += 1
+
+    past = f"（{record_date} 付け）" if record_date != today() else ""
+    print(f"✅ リプ周り +{count}件 をまとめて記録{past}\n")
+    show_status()
+
+
 def done_task(argv):
     i = argv.index("--done")
     rest = argv[i + 1:]
     if not rest:
-        sys.exit("usage: --done <task> [count=N target_url=... note=...] [--date YYYY-MM-DD]")
+        sys.exit("usage: --done <task> [count=N target_url=... note=...] [--date YYYY-MM-DD]\n"
+                  "       --done reply --batch [--date YYYY-MM-DD]  (1日の終わりにまとめて記録。stdinから1行1件)")
     task = rest[0]
     goals = load_goals()
     manual = [t for t, s in goals.items() if s.get("source") != "post_log"]
@@ -225,14 +272,24 @@ def done_task(argv):
     # --date YYYY-MM-DD で過去日付への後追い記録が可能
     record_date = today()
     filtered = []
+    batch = False
     j = 1
     while j < len(rest):
         if rest[j] == "--date" and j + 1 < len(rest):
             record_date = rest[j + 1]
             j += 2
+        elif rest[j] == "--batch":
+            batch = True
+            j += 1
         else:
             filtered.append(rest[j])
             j += 1
+
+    if batch:
+        if task != "reply":
+            sys.exit("--batch は task=reply のみ対応（1日の終わりにまとめてリプ周りを記録する用）")
+        done_task_batch_reply(record_date)
+        return
 
     data = {}
     for p in filtered:
@@ -247,15 +304,9 @@ def done_task(argv):
     if unknown:
         sys.exit(f"unknown keys: {unknown} (使えるのは {', '.join(allowed)})")
 
-    row = {c: "" for c in ACT_COLS}
-    row.update({"date": record_date, "task": task, "count": data.get("count", "1"),
-                "target_url": data.get("target_url", ""), "note": data.get("note", "")})
-    write_header = not ACTIVITY_LOG.exists()
-    with ACTIVITY_LOG.open("a", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=ACT_COLS)
-        if write_header:
-            w.writeheader()
-        w.writerow(row)
+    count = data.get("count", "1")
+    append_activity_row(record_date, task, count=count,
+                         target_url=data.get("target_url", ""), note=data.get("note", ""))
 
     if task == "reply" and data.get("target_url"):
         sys.path.insert(0, str(Path(__file__).parent))
@@ -264,7 +315,7 @@ def done_task(argv):
                               data.get("archetype", ""), data.get("note", ""))
 
     past = f"（{record_date} 付け）" if record_date != today() else ""
-    print(f"✅ {goals[task].get('label', task)} +{row['count']} を記録{past}\n")
+    print(f"✅ {goals[task].get('label', task)} +{count} を記録{past}\n")
     show_status()
 
 
