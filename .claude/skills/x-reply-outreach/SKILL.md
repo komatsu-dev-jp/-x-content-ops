@@ -72,29 +72,43 @@ description: |
 - 必要なら本文の事実確認を
 ```
 
-## 投稿後（送信件数のカウント）
+## 投稿後（記録：必須・自動では記録されない）
 
-**推奨: 1日の終わりにまとめて記録する。** リプを打つたびにコマンドを打つのは摩擦が大きく、
-結局記録が止まって週次分析ができなくなる（実際に発生した失敗パターン）。
-日中は送ったリプのURLをメモアプリ等に貼っておくだけにして、寝る前に1回でまとめて流し込む:
+**この記録は完全に手動。ユーザーが会話やコマンドで明示しない限り、Claude Code・スクリプトのどちらも
+自動では何も記録しない。**「URLを貼った」「相談した」だけでは記録されないことに注意する。
+記録経路は2つある。ユーザーの状況に応じて使い分ける:
 
-```
-python3 scripts/daily_tracker.py --done reply --batch <<'EOF'
-https://x.com/foo/status/123|狭い質問|嘆きに共感
-https://x.com/bar/status/456|同意+一歩
-https://x.com/baz/status/789
-EOF
-```
+### 経路A: この会話の中でリプを送った場合
 
-1行1件、`target_url[|archetype[|note]]` 形式（archetype/noteは省略可）。
+ユーザーが「送った」「これで送信した」等と**この会話内で報告したら、Claude Codeがその場で**
+`python3 scripts/log_reply.py --add target_url=... archetype=... note=...` を実行して記録する。
+ユーザー自身にコマンドを打たせる必要はない。1件のPachiTracker用アプリ内送信ごとに1回。
+
+### 経路B: スマホ等でClaude Codeと無関係に送った場合
+
+日中の送信をリアルタイムに記録することはできない（Claude Codeが送信を見ていないため）。
+以下のどちらかで、後からまとめて記録する:
+
+1. **ユーザーがCLIで直接**（メモアプリに控えたURLを寝る前に流し込む）:
+   ```
+   python3 scripts/daily_tracker.py --done reply --batch <<'EOF'
+   https://x.com/foo/status/123|狭い質問|嘆きに共感
+   https://x.com/bar/status/456|同意+一歩
+   https://x.com/baz/status/789
+   EOF
+   ```
+2. **Claude Codeに代行させる**: 夜にClaude Codeを開き、送ったURL（と使った型・狙いが分かれば）を
+   まとめて貼って「今日の分をまとめて記録して」と言う。Claude Codeが上記コマンドを代わりに実行する。
+
+いずれも1行1件、`target_url[|archetype[|note]]` 形式（archetype/noteは省略可）。
 `data/daily_activity_log.csv` と `data/reply_outreach_log.csv` の両方に一括反映される。
 
-その場で1件だけ記録したい場合は従来通り:
+### 進捗確認
 
 ```
 npm run today -- --done reply target_url=<相手投稿URL> note=<使った型など>
 ```
-
+（1件だけその場で記録したい場合。経路Aの内部処理と同じ）
 → `本日のタスク リプ周り 2/5 あと3件` のように進捗が出る（目標は `data/daily_goals.json`。
 最低ライン3・満点ライン5の2段階。量より継続を優先し、最低ラインを毎日守ることを優先する）。
 進捗だけ見たいときは `npm run today`。**送信は人間。スクリプトは数えるだけで投稿しない。**
@@ -107,13 +121,9 @@ npm run today -- --done reply target_url=<相手投稿URL> note=<使った型な
 
 ## 反応の記録（必須・週次分析の前提）
 
-送信直後、まず `data/reply_outreach_log.csv` に1件記録する:
-
-```
-python3 scripts/log_reply.py --add target_url=<相手投稿URL> archetype=<使った型> note=<狙い>
-```
-
-**翌日以降、反応が分かった時点で必ず更新する**（ここが抜けると週次で「一番効いているチャネルが測れない」状態になる）:
+**翌日以降、反応が分かった時点で必ず更新する**（ここが抜けると週次で「一番効いているチャネルが測れない」状態になる）。
+これも自動では起きない。ユーザーが「返信来た」「プロフィール見に来てくれた」等と報告したら、
+Claude Codeがその場で更新する（会話外なら経路Bと同様、ユーザーが直接実行するか後でまとめて依頼する）:
 
 ```
 python3 scripts/log_reply.py --update target_url=<相手投稿URL> got_reply=1 profile_visit=1 follow=0
