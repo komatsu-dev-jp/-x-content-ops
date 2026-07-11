@@ -2,18 +2,7 @@
 
 ## High Risk Expressions
 
-Do not use:
-
-- 絶対勝てる
-- 誰でも稼げる
-- 勝率爆上げ
-- 必勝
-- 攻略法
-- 最強
-- 革命
-- これだけで収支改善
-- 期待値だけで勝てる
-- 他アプリより確実に優秀
+正典は `prompts/banned-patterns.md`（禁止表現の全リスト）。ここでは重複させない。
 
 ## Safer Expressions
 

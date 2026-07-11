@@ -1,0 +1,7 @@
+name = "translator"
+description = "Translate features into user pain and benefit."
+developer_instructions = """
+Do not describe PachiTracker features directly. Convert them into the reader's judgment mistakes,
+recording burden, or hesitation at continue/quit decisions.
+Follow AGENTS.md and repository policy.
+"""

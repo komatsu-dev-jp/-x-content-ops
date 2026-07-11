@@ -84,6 +84,65 @@ def type_x_slot(rows, metric):
         print(f"| {t} | {cells[0]} | {cells[1]} | {cells[2]} | {winner} |")
 
 
+def reply_outreach_summary():
+    """data/reply_outreach_log.csv から型別の反応率を出す（リプ周りは投稿と並ぶ主要チャネル）。"""
+    path = Path("data/reply_outreach_log.csv")
+    print("\n## リプ周り実績（reply_outreach_log.csv）")
+    if not path.exists():
+        print("記録がありません。")
+        return
+    rows = list(csv.DictReader(path.open(encoding="utf-8")))
+    if not rows:
+        print("記録がありません。")
+        return
+
+    def flag(r, key):
+        return (r.get(key) or "").strip() in ("1", "true", "TRUE", "yes")
+
+    updated = [r for r in rows if r.get("got_reply") not in (None, "")]
+    total = len(rows)
+    print(f"total={total} 件 / 反応記録あり={len(updated)} 件（未更新は `npm run reply-log -- --update` で埋める）")
+    if not updated:
+        print("反応が記録されたリプがまだありません。翌日以降に `--update` で got_reply/profile_visit/follow を埋めてください。")
+        return
+
+    got_reply_n = sum(1 for r in updated if flag(r, "got_reply"))
+    pv_n = sum(1 for r in updated if flag(r, "profile_visit"))
+    follow_n = sum(1 for r in updated if flag(r, "follow"))
+    n = len(updated)
+    print(f"got_reply_rate={got_reply_n}/{n} ({got_reply_n/n:.0%}) | "
+          f"profile_visit={pv_n}/{n} ({pv_n/n:.0%}) | follow={follow_n}/{n} ({follow_n/n:.0%})")
+
+    by_archetype = defaultdict(list)
+    for r in updated:
+        by_archetype[r.get("archetype") or "(未設定)"].append(r)
+    print("\n| archetype | n | got_reply率 | profile_visit率 | follow率 |")
+    print("|---|---|---|---|---|")
+    for a in sorted(by_archetype):
+        gr = by_archetype[a]
+        m = len(gr)
+        print(f"| {a} | {m} | "
+              f"{sum(1 for r in gr if flag(r, 'got_reply'))/m:.0%} | "
+              f"{sum(1 for r in gr if flag(r, 'profile_visit'))/m:.0%} | "
+              f"{sum(1 for r in gr if flag(r, 'follow'))/m:.0%} |")
+
+
+def beta_interest_summary():
+    """data/daily_activity_log.csv の beta_interest イベントを一覧する（primary KPI）。"""
+    path = Path("data/daily_activity_log.csv")
+    print("\n## β興味の反応（beta_interest_count / primary KPI）")
+    if not path.exists():
+        print("記録がありません。")
+        return
+    rows = [r for r in csv.DictReader(path.open(encoding="utf-8")) if r.get("task") == "beta_interest"]
+    if not rows:
+        print("今週の記録はまだありません（`npm run today -- --done beta_interest ...` で記録）。")
+        return
+    print(f"累計 {len(rows)} 件")
+    for r in rows[-10:]:
+        print(f"- {r.get('date')} | {r.get('target_url') or '(URLなし)'} | {r.get('note') or ''}")
+
+
 def main():
     log = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("data/post_log.csv")
     if not log.exists():
@@ -99,6 +158,8 @@ def main():
     if not posted:
         print("\nまだ posted 行がありません。`npm run log` で実績を入れてから再実行してください。")
         print("（最低でも impressions / profile_visits / follows_gained / weekday / image_type を記録）")
+        reply_outreach_summary()
+        beta_interest_summary()
         return
 
     for r in posted:
@@ -110,8 +171,22 @@ def main():
               f"q={r.get('quality_score')} | pv_rate={r.get('profile_visit_rate')} | "
               f"first_line={r.get('first_line')}")
 
+    avg_imp = avg(posted, "impressions")
+    phase0 = avg_imp < MIN_IMP
+
+    if phase0:
+        print(f"\n## ⚠️ Phase 0 モード（posted平均impressions={avg_imp:.0f} < {MIN_IMP}）")
+        print("縮小率ランキングは信頼できないため参考値に格下げ。絶対数と定性シグナルで仮説を立てる。")
+        print("\n### Top Posts（絶対数: profile_visits順）")
+        for r in sorted(posted, key=lambda r: f(r, "profile_visits"), reverse=True)[:5]:
+            print(f"- {r.get('post_id')} | {r.get('post_type')} | {r.get('time_slot')} | "
+                  f"profile_visits={r.get('profile_visits')} | replies={r.get('replies')} | "
+                  f"follows_gained={r.get('follows_gained')} | imp={r.get('impressions')} | "
+                  f"first_line={r.get('first_line')}")
+
     prior_pv = prior_rate(posted, "profile_visits")
-    print(f"\n## Top Posts（プロフィール遷移・信頼度補正 / 縮小率, prior={prior_pv:.4f}, K={SHRINK_K}）")
+    ref_label = "（参考値・Phase 0のため根拠にしない）" if phase0 else ""
+    print(f"\n## Top Posts（プロフィール遷移・信頼度補正 / 縮小率, prior={prior_pv:.4f}, K={SHRINK_K}）{ref_label}")
     print(f"> 生のpv_rateではなく縮小率で順位付け。impressions<{MIN_IMP} は (低n) として保留。")
     for r in sorted(posted, key=lambda r: shrunk(r, "profile_visits", prior_pv), reverse=True)[:5]:
         low = " (低n)" if f(r, "impressions") < MIN_IMP else ""
@@ -131,6 +206,9 @@ def main():
     seg_table("セグメント: 曜日別", posted, "weekday", metrics)
 
     type_x_slot(posted, "profile_visit_rate")
+
+    reply_outreach_summary()
+    beta_interest_summary()
 
     print("\n## 次週の仮説（1つだけ決める）")
     print("```text")

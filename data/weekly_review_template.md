@@ -54,4 +54,3 @@ YYYY-MM-DD 〜 YYYY-MM-DD
 - data/ab_test_plan.csv（winning_slot / decision）
 - prompts/post-patterns.md（勝ちフック / Hook Bank）
 - prompts/banned-patterns.md（負けパターン）
-- docs/integrated-strategy.md

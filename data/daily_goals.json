@@ -1,6 +1,7 @@
 {
-  "post":   { "goal": 1,  "label": "投稿",     "source": "post_log" },
-  "reply":  { "goal": 5,  "label": "リプ周り", "source": "manual" },
-  "like":   { "goal": 10, "label": "いいね",   "source": "manual" },
-  "follow": { "goal": 3,  "label": "フォロー", "source": "manual" }
+  "reply":  { "goal": 5, "min_goal": 3, "label": "リプ周り", "source": "manual" },
+  "like":   { "goal": 0, "min_goal": 0, "label": "いいね",   "source": "manual" },
+  "follow": { "goal": 0, "min_goal": 0, "label": "フォロー", "source": "manual" },
+  "post":   { "goal": 0, "min_goal": 0, "label": "投稿",     "source": "post_log" },
+  "beta_interest": { "goal": 0, "min_goal": 0, "label": "β興味", "source": "manual" }
 }
