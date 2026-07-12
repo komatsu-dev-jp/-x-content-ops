@@ -1,0 +1,8 @@
+date,suggested_time,post_id,post_type,time_slot,has_image,image_type,status,first_line
+2026-07-03,08:30,week02-p2,あるある型,morning,FALSE,none,scheduled,これ自分もやってた
+2026-07-04,12:30,week02-p3,失敗告白型,noon,FALSE,none,scheduled,機能を増やしたら自分が一番使わなくなった
+2026-07-13,12:30,week04-p1,問題提起型,noon,FALSE,none,scheduled,撤退ラインを決めずに打ち始めると、気づいた時にはもう遅い。
+2026-07-14,08:30,week04-p4,UIスクショ型,morning,TRUE,screenshot,scheduled,記録が面倒だと、結局続かない。
+2026-07-15,08:30,week04-p5,検証メモ型,morning,FALSE,none,scheduled,まだ50回転しか回してないのに、「この台はダメだ」と判断してしまう。
+2026-07-16,21:30,week04-p2,あるある型,night,FALSE,none,scheduled,これ、あるある。
+2026-07-17,21:30,week04-p3,失敗告白型,night,FALSE,none,scheduled,自分も、「次はうまくいく」を何の根拠もなく信じてた時期があります。
