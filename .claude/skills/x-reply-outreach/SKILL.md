@@ -72,19 +72,55 @@ description: |
 - 必要なら本文の事実確認を
 ```
 
-## 投稿後（任意・進捗カウント）
+## 投稿後（送信件数のカウント）
 
-人間が選んだ返信を手で送信したら、その1件を本日のタスクに数える:
+**推奨: 1日の終わりにまとめて記録する。** リプを打つたびにコマンドを打つのは摩擦が大きく、
+結局記録が止まって週次分析ができなくなる（実際に発生した失敗パターン）。
+日中は送ったリプのURLをメモアプリ等に貼っておくだけにして、寝る前に1回でまとめて流し込む:
+
+```
+python3 scripts/daily_tracker.py --done reply --batch <<'EOF'
+https://x.com/foo/status/123|狭い質問|嘆きに共感
+https://x.com/bar/status/456|同意+一歩
+https://x.com/baz/status/789
+EOF
+```
+
+1行1件、`target_url[|archetype[|note]]` 形式（archetype/noteは省略可）。
+`data/daily_activity_log.csv` と `data/reply_outreach_log.csv` の両方に一括反映される。
+
+その場で1件だけ記録したい場合は従来通り:
 
 ```
 npm run today -- --done reply target_url=<相手投稿URL> note=<使った型など>
 ```
 
-→ `本日のタスク リプ周り 2/5 あと3件` のように進捗が出る（目標は `data/daily_goals.json`）。
-いいね・フォローも同様（`--done like count=5` / `--done follow target_url=...`）。
+→ `本日のタスク リプ周り 2/5 あと3件` のように進捗が出る（目標は `data/daily_goals.json`。
+最低ライン3・満点ライン5の2段階。量より継続を優先し、最低ラインを毎日守ることを優先する）。
 進捗だけ見たいときは `npm run today`。**送信は人間。スクリプトは数えるだけで投稿しない。**
 
-返信が返ってきたか等の成果は、後日 `data/reply_outreach_log.csv` に記録して週次分析に使う（任意・日次カウントとは別）。
+いいね・フォローはノルマなし（記録のみ）:
+- いいねはリプ対象を探す下調べのついでに行うもので、独立目標にはしない（`--done like count=N` で記録は可能）。
+- **フォローは、リプで会話が成立した相手（`got_reply=1` を記録した相手）だけに絞る**
+  （`--done follow target_url=...`）。機械的に毎日フォローするとFF比が悪化し、
+  プロフィール遷移してきた人への信頼感を損なう。
+
+## 反応の記録（必須・週次分析の前提）
+
+送信直後、まず `data/reply_outreach_log.csv` に1件記録する:
+
+```
+python3 scripts/log_reply.py --add target_url=<相手投稿URL> archetype=<使った型> note=<狙い>
+```
+
+**翌日以降、反応が分かった時点で必ず更新する**（ここが抜けると週次で「一番効いているチャネルが測れない」状態になる）:
+
+```
+python3 scripts/log_reply.py --update target_url=<相手投稿URL> got_reply=1 profile_visit=1 follow=0
+```
+
+反応がなかった場合も `got_reply=0` 等で明示的に更新する（空欄のままだと未計測扱いになり週次から漏れる）。
+`scripts/reply_mix_report.py`（`npm run reply-mix`）でtier構成、`scripts/weekly_review.py`（`npm run weekly`）で型別（archetype別）の got_reply率・profile_visit率・follow率を確認できる。
 
 ## Hard Constraints
 

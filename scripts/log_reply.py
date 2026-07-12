@@ -25,7 +25,7 @@ follow/profile_visit/got_reply は送信直後は空でよく、後日 --update 
 import csv
 import re
 import sys
-from datetime import date
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 LOG = Path("data/reply_outreach_log.csv")
@@ -33,10 +33,12 @@ ACCOUNTS = Path("data/account_tiers.csv")
 ACCOUNT_COLS = ["handle", "followers", "tier", "updated", "note"]
 COLS = ["date", "target_url", "tier", "archetype", "got_reply", "profile_visit", "follow", "note"]
 VALID_TIERS = {"A", "B", "C"}
+JST = timezone(timedelta(hours=9))
 
 
 def today():
-    return date.today().isoformat()
+    """JST基準の日付（サーバーはUTCで動くため、深夜0-9時台の記録が前日にならないようにする）。"""
+    return datetime.now(JST).date().isoformat()
 
 
 def followers_to_tier(followers):
@@ -168,14 +170,19 @@ def add(argv):
 
 
 def update(argv):
+    """同じ target_url で複数行ある場合（同じ相手に複数回リプした等）、
+    未更新（got_reply未記入）の行を新しい順に優先して更新する。
+    全部更新済みなら最新行を上書きする（フォールバック）。"""
     data = parse_pairs(argv, "--update")
     rows = load_rows()
-    target = next((r for r in reversed(rows) if r.get("target_url") == data["target_url"]), None)
-    if target is None:
+    matches = [r for r in rows if r.get("target_url") == data["target_url"]]
+    if not matches:
         sys.exit(f"target_url が見つかりません: {data['target_url']}（先に --add してください）")
+    target = next((r for r in reversed(matches) if not (r.get("got_reply") or "").strip()), matches[-1])
     target.update({k: v for k, v in data.items() if k != "target_url"})
     save_rows(rows)
-    print(f"✅ 更新: {data['target_url']}")
+    note = "" if len(matches) == 1 else f"（同URL{len(matches)}件中、未更新の行を更新）"
+    print(f"✅ 更新: {data['target_url']}{note}")
 
 
 def main():

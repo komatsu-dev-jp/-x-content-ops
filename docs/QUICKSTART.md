@@ -100,12 +100,19 @@ npm run weekly          # セグメント別＋型×時間帯の勝ちスロッ�
 | `npm run weekly` | 週次レビュー（縮小率ランキング） |
 | `npm run schedule` | 予約投稿用ワークシートCSV書き出し |
 | `npm run tweet -- <URL>` | リプ周り用：ターゲット投稿の本文取得（best-effort） |
-| `npm run today` | 本日の全タスク進捗を表示（投稿/リプ/いいね/フォロー、あと何件） |
+| `npm run today` | 本日の進捗を表示（リプ周りは最低ライン3/満点ライン5。他はノルマなし・記録のみ） |
+| `python3 scripts/daily_tracker.py --done reply --batch <<'EOF' ...` | **推奨**：1日の終わりにURLをまとめて記録（1行1件、摩擦を減らして記録漏れを防ぐ） |
 | `npm run today -- --done reply target_url=...` | 手で送ったリプを1件カウント |
 | `npm run today -- --done like count=5` | いいねを5件カウント |
 | `npm run today -- --done follow target_url=...` | フォローを1件カウント |
+| `npm run today -- --done beta_interest target_url=... note=...` | β興味の反応を記録（ノルマなし・記録専用） |
 | `npm run notify` | 本日の進捗を実数つきでSlackに通知（要webhook設定） |
 | `npm run today -- --done like count=5 --notify` | 記録と同時にSlack通知 |
+| `npm run reply-log -- --add target_url=... archetype=...` | リプ周りを1件記録（tierは自動参照） |
+| `npm run reply-log -- --update target_url=... got_reply=1 profile_visit=1 follow=0` | 反応が分かったら更新 |
+| `npm run reply-mix` | リプ周りのtier構成を確認 |
+| `npm run backlog -- --status` | ネタ帳の未消化件数を確認 |
+| `npm run backlog -- --consume "<ideaの前方一致>" post_id=<id>` | 使ったネタをconsumedに変更 |
 
 ---
 

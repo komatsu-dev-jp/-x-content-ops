@@ -4,9 +4,13 @@
 自動操作はしない。人間が手で投稿/リプ/いいね/フォローしたあとに 1 カウントするだけの
 後追いツール。追加課金なし（ローカルCSV/JSONのみ）。
 
-タスク定義: data/daily_goals.json（task ごとに goal / label / source）
+タスク定義: data/daily_goals.json（task ごとに goal / min_goal / label / source）
   - source=post_log : data/post_log.csv の status=posted & 本日分を自動カウント
   - source=manual   : data/daily_activity_log.csv に --done で記録した本日分をカウント
+  - goal=0          : ノルマなし・記録のみ（フォロー/いいね/β興味/投稿はこちら。
+                       量より継続を優先し、機械的な日次ノルマにしない）
+  - min_goal        : 満点ライン(goal)未達でも「最低ライン」を達成しているか判定する下限。
+                       goal>min_goal のタスク（リプ周り）だけ意味を持つ。継続できる最低量の目安。
 
 使い方:
   python3 scripts/daily_tracker.py                          # 本日の全タスク進捗を表示
@@ -19,7 +23,7 @@
 import csv
 import json
 import sys
-from datetime import date
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 POST_LOG = Path("data/post_log.csv")
@@ -29,16 +33,19 @@ GOALS = Path("data/daily_goals.json")
 ACT_COLS = ["date", "task", "count", "target_url", "note"]
 TIER_TARGET = {"A": 50, "B": 30, "C": 20}
 TIER_LABEL = {"A": "A 500〜5k", "B": "B 5k〜50k", "C": "C 10万+"}
+JST = timezone(timedelta(hours=9))
 DEFAULT_GOALS = {
-    "post":   {"goal": 1,  "label": "投稿",     "source": "post_log"},
-    "reply":  {"goal": 5,  "label": "リプ周り", "source": "manual"},
-    "like":   {"goal": 10, "label": "いいね",   "source": "manual"},
-    "follow": {"goal": 3,  "label": "フォロー", "source": "manual"},
+    "reply":  {"goal": 5, "min_goal": 3, "label": "リプ周り", "source": "manual"},
+    "like":   {"goal": 0, "min_goal": 0, "label": "いいね",   "source": "manual"},
+    "follow": {"goal": 0, "min_goal": 0, "label": "フォロー", "source": "manual"},
+    "post":   {"goal": 0, "min_goal": 0, "label": "投稿",     "source": "post_log"},
+    "beta_interest": {"goal": 0, "min_goal": 0, "label": "β興味", "source": "manual"},
 }
 
 
 def today():
-    return date.today().isoformat()
+    """JST基準の日付。サーバーがUTCで動いていても深夜0-9時台の記録が前日にならないようにする。"""
+    return datetime.now(JST).date().isoformat()
 
 
 def load_goals():
@@ -132,27 +139,41 @@ def bar(done, goal):
     return "▓" * filled + "░" * max(goal - filled, 0)
 
 
-def line(label, done, goal, label_w):
+def line(label, done, goal, label_w, min_goal=0):
     lbl = pad(label, label_w)
     if goal <= 0:
-        return f"{lbl}  {done}/{goal}"
+        return f"{lbl}  {done}件（ノルマなし・記録のみ）"
     if done >= goal:
         extra = f"（+{done - goal}）" if done > goal else ""
-        return f"{lbl}  {done}/{goal}  {bar(done, goal)}  ✅ 達成{extra}"
+        return f"{lbl}  {done}/{goal}  {bar(done, goal)}  ✅ 満点ライン達成{extra}"
+    if min_goal > 0 and done >= min_goal:
+        return f"{lbl}  {done}/{goal}  {bar(done, goal)}  ✅最低ライン達成・満点まであと{goal - done}"
+    if min_goal > 0:
+        return f"{lbl}  {done}/{goal}  {bar(done, goal)}  最低ライン({min_goal})まであと{min_goal - done}"
     return f"{lbl}  {done}/{goal}  {bar(done, goal)}  あと{goal - done}件"
 
 
 def compute_status():
-    """進捗を構造化して返す（表示・Slack通知の共通ソース）。"""
+    """進捗を構造化して返す（表示・Slack通知の共通ソース）。
+    最低ライン(min_goal)と満点ライン(goal)を別々に集計する。"""
     goals = load_goals()
-    tasks, done_total, goal_total = [], 0, 0
+    tasks, done_total, goal_total, min_done, min_total = [], 0, 0, 0, 0
     for task, spec in goals.items():
         goal = int(spec.get("goal") or 0)
+        min_goal = int(spec.get("min_goal") or 0)
         done = count_today(task, spec)
-        tasks.append({"label": spec.get("label", task), "done": done, "goal": goal})
-        done_total += min(done, goal)
-        goal_total += goal
-    return {"date": today(), "tasks": tasks, "done_total": done_total, "goal_total": goal_total}
+        tasks.append({"label": spec.get("label", task), "done": done, "goal": goal, "min_goal": min_goal})
+        if goal > 0:
+            done_total += min(done, goal)
+            goal_total += goal
+        if min_goal > 0:
+            min_done += min(done, min_goal)
+            min_total += min_goal
+    return {
+        "date": today(), "tasks": tasks,
+        "done_total": done_total, "goal_total": goal_total,
+        "min_done": min_done, "min_total": min_total,
+    }
 
 
 def show_status():
@@ -161,14 +182,18 @@ def show_status():
     label_w = max((disp_width(t["label"]) for t in st["tasks"]), default=4)
     print(f"📅 本日のタスク ({st['date']})\n")
     for task, t in zip(goals, st["tasks"]):
-        print(line(t["label"], t["done"], t["goal"], label_w))
+        print(line(t["label"], t["done"], t["goal"], label_w, t.get("min_goal", 0)))
         if task == "reply":
             tb = tier_breakdown_line(t["goal"])
             if tb:
                 print(tb)
+    min_done, min_total = st["min_done"], st["min_total"]
+    if min_total > 0:
+        min_mark = "✅ 最低ライン達成" if min_done >= min_total else f"あと{min_total - min_done}件"
+        print(f"\n最低ライン {min_done}/{min_total}  {min_mark}")
     done_total, goal_total = st["done_total"], st["goal_total"]
-    print(f"\n合計 {done_total}/{goal_total} 完了", end="")
-    print(" 🎉 本日のノルマ達成！" if done_total >= goal_total and goal_total > 0
+    print(f"満点ライン {done_total}/{goal_total}", end="")
+    print(" 🎉 本日の満点ライン達成！" if done_total >= goal_total and goal_total > 0
           else f"（残り {goal_total - done_total} 件）")
 
 
@@ -184,11 +209,58 @@ def maybe_notify(argv):
         print(f"(Slack通知スキップ: {e})")
 
 
+def append_activity_row(record_date, task, count="1", target_url="", note=""):
+    row = {c: "" for c in ACT_COLS}
+    row.update({"date": record_date, "task": task, "count": count,
+                "target_url": target_url, "note": note})
+    write_header = not ACTIVITY_LOG.exists()
+    with ACTIVITY_LOG.open("a", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=ACT_COLS)
+        if write_header:
+            w.writeheader()
+        w.writerow(row)
+
+
+def done_task_batch_reply(record_date):
+    """1日の終わりにまとめてリプ周りを記録する（--batch）。
+
+    リプを打つたびにコマンドを打つのは摩擦が大きく忘れがちなので、日中はメモアプリ等に
+    URLを貼るだけにして、寝る前に1回だけまとめて流し込む運用を想定。
+    stdinから1行1件、`target_url[|archetype[|note]]` 形式で読む（archetype/noteは省略可）。
+    """
+    lines = [ln.strip() for ln in sys.stdin if ln.strip()]
+    if not lines:
+        sys.exit("stdinが空です。1行1件、target_url[|archetype[|note]] 形式で流し込んでください。\n"
+                  "例:\n  python3 scripts/daily_tracker.py --done reply --batch <<'EOF'\n"
+                  "  https://x.com/foo/status/1|狭い質問|嘆きに共感\n"
+                  "  https://x.com/bar/status/2\n  EOF")
+
+    sys.path.insert(0, str(Path(__file__).parent))
+    import log_reply
+
+    count = 0
+    for ln in lines:
+        parts = [p.strip() for p in ln.split("|")]
+        target_url = parts[0]
+        archetype = parts[1] if len(parts) > 1 else ""
+        note = parts[2] if len(parts) > 2 else ""
+        if not target_url:
+            continue
+        append_activity_row(record_date, "reply", target_url=target_url, note=note)
+        log_reply.append_row(record_date, target_url, "", archetype, note)
+        count += 1
+
+    past = f"（{record_date} 付け）" if record_date != today() else ""
+    print(f"✅ リプ周り +{count}件 をまとめて記録{past}\n")
+    show_status()
+
+
 def done_task(argv):
     i = argv.index("--done")
     rest = argv[i + 1:]
     if not rest:
-        sys.exit("usage: --done <task> [count=N target_url=... note=...] [--date YYYY-MM-DD]")
+        sys.exit("usage: --done <task> [count=N target_url=... note=...] [--date YYYY-MM-DD]\n"
+                  "       --done reply --batch [--date YYYY-MM-DD]  (1日の終わりにまとめて記録。stdinから1行1件)")
     task = rest[0]
     goals = load_goals()
     manual = [t for t, s in goals.items() if s.get("source") != "post_log"]
@@ -200,14 +272,24 @@ def done_task(argv):
     # --date YYYY-MM-DD で過去日付への後追い記録が可能
     record_date = today()
     filtered = []
+    batch = False
     j = 1
     while j < len(rest):
         if rest[j] == "--date" and j + 1 < len(rest):
             record_date = rest[j + 1]
             j += 2
+        elif rest[j] == "--batch":
+            batch = True
+            j += 1
         else:
             filtered.append(rest[j])
             j += 1
+
+    if batch:
+        if task != "reply":
+            sys.exit("--batch は task=reply のみ対応（1日の終わりにまとめてリプ周りを記録する用）")
+        done_task_batch_reply(record_date)
+        return
 
     data = {}
     for p in filtered:
@@ -222,15 +304,9 @@ def done_task(argv):
     if unknown:
         sys.exit(f"unknown keys: {unknown} (使えるのは {', '.join(allowed)})")
 
-    row = {c: "" for c in ACT_COLS}
-    row.update({"date": record_date, "task": task, "count": data.get("count", "1"),
-                "target_url": data.get("target_url", ""), "note": data.get("note", "")})
-    write_header = not ACTIVITY_LOG.exists()
-    with ACTIVITY_LOG.open("a", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=ACT_COLS)
-        if write_header:
-            w.writeheader()
-        w.writerow(row)
+    count = data.get("count", "1")
+    append_activity_row(record_date, task, count=count,
+                         target_url=data.get("target_url", ""), note=data.get("note", ""))
 
     if task == "reply" and data.get("target_url"):
         sys.path.insert(0, str(Path(__file__).parent))
@@ -239,7 +315,7 @@ def done_task(argv):
                               data.get("archetype", ""), data.get("note", ""))
 
     past = f"（{record_date} 付け）" if record_date != today() else ""
-    print(f"✅ {goals[task].get('label', task)} +{row['count']} を記録{past}\n")
+    print(f"✅ {goals[task].get('label', task)} +{count} を記録{past}\n")
     show_status()
 
 

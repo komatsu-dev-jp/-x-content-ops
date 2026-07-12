@@ -7,7 +7,7 @@
 """
 import csv
 import sys
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 LOG = Path("data/reply_outreach_log.csv")
@@ -17,6 +17,11 @@ LABEL = {
     "B": "B 5,000〜50,000垢",
     "C": "C 10万超アカウント",
 }
+JST = timezone(timedelta(hours=9))
+
+
+def today():
+    return datetime.now(JST).date()
 
 
 def load_rows(days=None):
@@ -25,7 +30,7 @@ def load_rows(days=None):
     rows = list(csv.DictReader(LOG.open(encoding="utf-8")))
     if days is None:
         return rows
-    cutoff = date.today() - timedelta(days=days)
+    cutoff = today() - timedelta(days=days)
     out = []
     for r in rows:
         try:
