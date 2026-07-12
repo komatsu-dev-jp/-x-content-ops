@@ -36,10 +36,10 @@
 
 ## セグメント別平均（pv_rate / follow_conv_rate）
 
-- 型別: あるある型のみpv_rate>0（0.0120, n=1）。他の型は全てpv_rate=0（n=1〜2ずつ）
-- 時間帯別（※型と交絡。参考）: noon(n=1)のみpv_rate>0、morning/night(各n=2)は0
-- 画像タイプ別: none(n=4)がpv_rate=0.0040、screenshot(n=1)は0
-- 曜日別: fri(n=1, week01-p2)のみpv_rate>0
+- 型別: UIスクショ型（0.0145, n=1）とあるある型（0.0120, n=1）のみpv_rate>0。他の型は全てpv_rate=0
+- 時間帯別（※型と交絡。参考）: night(week01-p4)とnoon(week01-p2)でpv発生。morningは0
+- 画像タイプ別: screenshot(n=1, week01-p4)がpv_rate=0.0145で最高。none側はweek01-p2の1件のみpv発生
+- 曜日別: mon(week01-p4)とfri(week01-p2)でpv_rate>0
 
 ## 型×時間帯（同型の週またぎ比較）
 
