@@ -30,11 +30,13 @@ Claude Code の `/loop` に貼って使う実戦テンプレ。`<<...>>` を環�
    （ゼロから考えず在庫を使う。足りない角度だけ x-idea-harvest で補う）
 3. 引いたネタと仮説・型×時間帯ローテに沿って x-growth-company で投稿を5本生成
 4. 各案を x-score-post と x-risk-check にかけ、score90以上 / risk none になるまで直す
-5. 使ったネタは npm run backlog -- --consume "idea前方一致" post_id=... で投稿済にする
-6. 未使用が10件を切っていたら x-idea-harvest で15件まで補充
-7. npm run schedule で予約用CSVを output/ に書き出す
+5. **投稿日は月・水・金の3枠だけに割り当てる**（曜日別ルーティンの正典。毎日投稿にしない。
+   金曜は5本中いちばん強い1本）。残り2本は「翌週在庫」として翌週の月・水に仮置きする
+6. 使ったネタは npm run backlog -- --consume "idea前方一致" post_id=... で投稿済にする
+7. 未使用が10件を切っていたら x-idea-harvest で15件まで補充
+8. npm run schedule で予約用CSVを output/ に書き出す
 
-達成条件: 5本が score90↑ / risk none / 曜日・スロット割当済み / CSV出力済み /
+達成条件: 5本が score90↑ / risk none / 月水金3本+翌週在庫2本に割当済み / CSV出力済み /
 　　　　　backlog消化と補充が済んでいる
 達成したら要約を出して停止。公開・コミットはしない（人間が確認）。
 ```
