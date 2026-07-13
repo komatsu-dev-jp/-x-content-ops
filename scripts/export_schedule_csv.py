@@ -7,10 +7,14 @@ X Pro（予約投稿）はCSVの自動取り込みには非対応のため、こ
 使い方:
   python3 scripts/export_schedule_csv.py                 # stdout に出力
   python3 scripts/export_schedule_csv.py --out out.csv   # ファイルに出力
-  python3 scripts/export_schedule_csv.py --all           # posted も含める（既定は未投稿のみ）
+  python3 scripts/export_schedule_csv.py --all           # posted/skipped も含める（既定は scheduled のみ）
+
+過去日付の scheduled 行が残っている場合は stderr に警告する（投稿済みなら実績を記録、
+見送りなら status=skipped にしてから再出力する）。
 """
 import csv
 import sys
+from datetime import date
 from pathlib import Path
 
 LOG = Path("data/post_log.csv")
@@ -34,10 +38,17 @@ def main():
         sys.exit(f"{LOG} not found")
 
     rows = list(csv.DictReader(LOG.open(encoding="utf-8")))
+    today = date.today().isoformat()
     selected = []
     for r in rows:
-        if not include_all and r.get("status") == "posted":
+        if not include_all and r.get("status") != "scheduled":
             continue
+        if r.get("status") == "scheduled" and r.get("date", "") < today:
+            print(
+                f"⚠️ {r.get('post_id')}: date={r.get('date')} は過去です。"
+                "投稿済みなら実績を記録、見送りなら status=skipped に更新してください。",
+                file=sys.stderr,
+            )
         selected.append({
             "date": r.get("date", ""),
             "suggested_time": SLOT_TIME.get(r.get("time_slot", ""), ""),
