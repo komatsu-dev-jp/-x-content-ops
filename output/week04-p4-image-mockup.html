@@ -1,0 +1,495 @@
+<title>week04-p4 画像候補比較</title>
+<style>
+  :root{
+    --bg:#eef2f0;
+    --surface:#ffffff;
+    --surface-2:#eef3f1;
+    --phone-bg:#10201f;
+    --phone-surface:#16302c;
+    --phone-surface-2:#1c3a34;
+    --text:#12211d;
+    --text-mute:#5c7a72;
+    --phone-text:#eef5f2;
+    --phone-text-mute:#86a39c;
+    --accent:#1f9d6c;
+    --accent-2:#2f8f88;
+    --warn:#b8722a;
+    --danger:#c14a3f;
+    --line:rgba(18,33,29,0.10);
+    --phone-line:rgba(255,255,255,0.09);
+    --radius-page:18px;
+    --radius-phone:34px;
+    --radius-card:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0a1412;
+      --surface:#101f1c;
+      --surface-2:#152c27;
+      --text:#eef5f2;
+      --text-mute:#8fab a3;
+      --text-mute:#8fada3;
+      --line:rgba(255,255,255,0.09);
+      --accent:#3fbb84;
+      --accent-2:#59c3bb;
+      --warn:#e0a256;
+      --danger:#e2685c;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0a1412;
+    --surface:#101f1c;
+    --surface-2:#152c27;
+    --text:#eef5f2;
+    --text-mute:#8fada3;
+    --line:rgba(255,255,255,0.09);
+    --accent:#3fbb84;
+    --accent-2:#59c3bb;
+    --warn:#e0a256;
+    --danger:#e2685c;
+  }
+  :root[data-theme="light"]{
+    --bg:#eef2f0;
+    --surface:#ffffff;
+    --surface-2:#eef3f1;
+    --text:#12211d;
+    --text-mute:#5c7a72;
+    --line:rgba(18,33,29,0.10);
+    --accent:#1f9d6c;
+    --accent-2:#2f8f88;
+    --warn:#b8722a;
+    --danger:#c14a3f;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.6;
+  }
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:40px 24px 80px;
+  }
+  header.page-head{
+    margin-bottom:28px;
+  }
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--accent-2);
+    font-weight:700;
+    margin:0 0 10px;
+  }
+  h1{
+    font-size:clamp(22px,3vw,30px);
+    margin:0 0 12px;
+    text-wrap:balance;
+    letter-spacing:-0.01em;
+  }
+  .post-text{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius-card);
+    padding:18px 20px;
+    max-width:640px;
+    font-size:15px;
+    color:var(--text);
+    white-space:pre-line;
+  }
+  .post-text b{ color:var(--accent-2); font-size:12px; letter-spacing:0.06em; text-transform:uppercase; display:block; margin-bottom:8px; font-weight:700; }
+
+  .recommend-banner{
+    margin:28px 0 36px;
+    padding:18px 22px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-left:4px solid var(--accent);
+    border-radius:12px;
+    display:flex;
+    gap:16px;
+    align-items:flex-start;
+  }
+  .recommend-banner .badge{
+    flex:none;
+    background:var(--accent);
+    color:#06231a;
+    font-weight:800;
+    font-size:12px;
+    letter-spacing:0.03em;
+    padding:6px 12px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .recommend-banner p{ margin:0; font-size:14.5px; color:var(--text); }
+  .recommend-banner p + p{ margin-top:6px; color:var(--text-mute); font-size:13.5px; }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:28px;
+  }
+  @media (max-width:960px){
+    .grid{ grid-template-columns:1fr; max-width:380px; margin:0 auto; }
+  }
+
+  .option{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .option-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .option-title{
+    font-size:14.5px;
+    font-weight:700;
+    margin:0;
+  }
+  .verdict{
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:0.03em;
+    padding:4px 10px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .verdict.good{ background:color-mix(in srgb, var(--accent) 20%, transparent); color:var(--accent); }
+  .verdict.warn{ background:color-mix(in srgb, var(--warn) 22%, transparent); color:var(--warn); }
+  .verdict.bad{ background:color-mix(in srgb, var(--danger) 22%, transparent); color:var(--danger); }
+
+  /* phone frame */
+  .phone{
+    background:#000;
+    border-radius:var(--radius-phone);
+    padding:10px;
+    box-shadow:0 18px 40px -18px rgba(0,0,0,0.45), 0 2px 0 rgba(255,255,255,0.04) inset;
+  }
+  .screen{
+    background:var(--phone-bg);
+    color:var(--phone-text);
+    border-radius:26px;
+    overflow:hidden;
+    aspect-ratio:9/17.5;
+    display:flex;
+    flex-direction:column;
+    font-size:13px;
+    position:relative;
+  }
+  .statusbar{
+    display:flex;
+    justify-content:space-between;
+    padding:10px 18px 0;
+    font-size:11px;
+    color:var(--phone-text-mute);
+    font-variant-numeric:tabular-nums;
+  }
+  .screen-title{
+    padding:14px 18px 4px;
+    font-size:11px;
+    color:var(--phone-text-mute);
+    letter-spacing:0.04em;
+  }
+  .screen-h1{
+    padding:0 18px 12px;
+    font-size:19px;
+    font-weight:800;
+  }
+  .screen-body{
+    padding:0 16px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    flex:1;
+  }
+
+  /* Candidate A: input flow */
+  .tap-row{ display:flex; gap:8px; }
+  .tap-btn{
+    flex:1;
+    background:var(--phone-surface);
+    border:1px solid var(--phone-line);
+    border-radius:14px;
+    padding:14px 10px;
+    text-align:center;
+    font-weight:700;
+    font-size:12.5px;
+  }
+  .tap-btn small{ display:block; font-weight:500; color:var(--phone-text-mute); font-size:10px; margin-top:4px;}
+  .tap-btn.on{ background:var(--accent); color:#06231a; border-color:transparent; }
+  .machine-card{
+    background:var(--phone-surface);
+    border:1px solid var(--phone-line);
+    border-radius:14px;
+    padding:12px 14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .machine-card .name{ font-weight:700; font-size:13px; }
+  .machine-card .sub{ color:var(--phone-text-mute); font-size:11px; margin-top:2px; }
+  .fab{
+    margin-top:auto;
+    align-self:center;
+    width:64px; height:64px;
+    border-radius:50%;
+    background:var(--accent);
+    color:#06231a;
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px; font-weight:800;
+    box-shadow:0 10px 24px -8px color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+  .fab-label{ text-align:center; font-size:11px; color:var(--phone-text-mute); margin-top:6px; }
+  .log-strip{
+    background:var(--phone-surface);
+    border-radius:12px;
+    padding:8px 12px;
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    color:var(--phone-text-mute);
+  }
+
+  /* Candidate B/C: 見切りナビ */
+  .navi-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:2px;
+  }
+  .navi-pill{
+    background:color-mix(in srgb, var(--accent) 22%, transparent);
+    color:var(--accent);
+    font-weight:800;
+    font-size:11px;
+    padding:5px 10px;
+    border-radius:999px;
+  }
+  .navi-ghost{
+    background:var(--phone-surface);
+    color:var(--phone-text-mute);
+    font-size:10.5px;
+    padding:5px 9px;
+    border-radius:999px;
+  }
+  .navi-status{ font-size:24px; font-weight:800; margin:6px 0 10px; }
+  .chip-row{ display:flex; gap:8px; }
+  .chip{
+    flex:1;
+    text-align:center;
+    padding:8px 4px;
+    border-radius:10px;
+    font-size:11px;
+    font-weight:700;
+    background:var(--phone-surface);
+    color:var(--phone-text-mute);
+    border:1px solid var(--phone-line);
+  }
+  .chip.on{ background:var(--accent); color:#06231a; border-color:transparent; }
+  .big-num{
+    font-size:34px;
+    font-weight:800;
+    font-variant-numeric:tabular-nums;
+    margin:10px 0 2px;
+  }
+  .big-num.masked{ filter:blur(7px); user-select:none; }
+  .caption-line{ font-size:11.5px; color:var(--phone-text-mute); margin-bottom:10px; }
+  .caption-line.masked{ filter:blur(4px); user-select:none; }
+  .stat3{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:auto; }
+  .stat-box{
+    background:var(--phone-surface);
+    border-radius:12px;
+    padding:10px 6px;
+    text-align:center;
+  }
+  .stat-box .lbl{ font-size:10px; color:var(--phone-text-mute); }
+  .stat-box .val{ font-size:15px; font-weight:800; margin-top:2px; font-variant-numeric:tabular-nums; }
+  .stat-box .val.masked{ filter:blur(6px); user-select:none; }
+  .redacted-tag{
+    position:absolute;
+    top:8px; right:8px;
+    background:var(--danger);
+    color:#fff;
+    font-size:9.5px;
+    font-weight:800;
+    padding:3px 7px;
+    border-radius:6px;
+    letter-spacing:0.02em;
+  }
+
+  .reasons{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius-card);
+    padding:14px 16px;
+    font-size:13px;
+    color:var(--text-mute);
+  }
+  .reasons ul{ margin:0; padding-left:18px; }
+  .reasons li + li{ margin-top:5px; }
+  .reasons li b{ color:var(--text); }
+
+  footer.note{
+    margin-top:44px;
+    font-size:12.5px;
+    color:var(--text-mute);
+    border-top:1px solid var(--line);
+    padding-top:18px;
+  }
+</style>
+
+<div class="wrap">
+  <header class="page-head">
+    <p class="eyebrow">画像選定 &middot; week04-p4 &middot; UIスクショ型</p>
+    <h1>どの画面を貼るか、3案で比較</h1>
+    <div class="post-text">
+      <b>この投稿の本文</b>
+      記録が面倒だと、結局続かない。
+
+だからPachiTrackerは、実戦中に迷わず押せる入力を優先しました。
+
+台選び・続行・撤退を、その場でサッと記録。
+
+#個人開発
+    </div>
+  </header>
+
+  <div class="recommend-banner">
+    <span class="badge">推奨：候補A</span>
+    <div>
+      <p>「入力フロー」画面を貼ってください。本文が語っている“迷わず押せる入力”をそのまま見せられ、内部の閾値も一切写り込みません。</p>
+      <p>見切りナビ画面（候補B/C）は今回の文章とテーマが違う上、閾値の数字が写るため今日の投稿には不向きです。</p>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- Candidate A -->
+    <div class="option">
+      <div class="option-head">
+        <p class="option-title">候補A：入力フロー画面</p>
+        <span class="verdict good">推奨</span>
+      </div>
+      <div class="phone">
+        <div class="screen">
+          <div class="statusbar"><span>21:30</span><span>●●●●</span></div>
+          <div class="screen-title">記録する</div>
+          <div class="screen-h1">今どこですか？</div>
+          <div class="screen-body">
+            <div class="machine-card">
+              <div>
+                <div class="name">P大海物語5 MTE2</div>
+                <div class="sub">実戦中 &middot; 3列目 12番</div>
+              </div>
+              <div class="phone-text-mute">▾</div>
+            </div>
+            <div class="tap-row">
+              <div class="tap-btn on">続行<small>ここで打つ</small></div>
+              <div class="tap-btn">撤退<small>ヤメる</small></div>
+            </div>
+            <div class="tap-row">
+              <div class="tap-btn">根拠あり<small>回転良い</small></div>
+              <div class="tap-btn">根拠薄い<small>なんとなく</small></div>
+            </div>
+            <div class="fab">＋</div>
+            <div class="fab-label">タップで記録完了</div>
+            <div class="log-strip"><span>今日の記録</span><span>3件保存済み</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="reasons">
+        <ul>
+          <li><b>本文と一致</b>：台選び・続行・撤退がそのままボタンになっている。</li>
+          <li><b>数字が写らない</b>：内部閾値・判定根拠の値は表示されない。</li>
+          <li><b>遷移期待</b>：実装済みの入力導線として断定表現なく見せられる。</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Candidate B -->
+    <div class="option">
+      <div class="option-head">
+        <p class="option-title">候補B：見切りナビ（数値を隠した版）</p>
+        <span class="verdict warn">要加工・今回は非推奨</span>
+      </div>
+      <div class="phone">
+        <div class="screen">
+          <div class="statusbar"><span>21:30</span><span>●●●●</span></div>
+          <div class="screen-title">見切りナビ</div>
+          <div class="screen-body" style="padding-top:14px;">
+            <div class="navi-head">
+              <span class="navi-pill">続行</span>
+              <span class="navi-ghost">根拠 ›</span>
+            </div>
+            <div class="chip-row">
+              <div class="chip">3K</div><div class="chip">5K</div><div class="chip">10K</div><div class="chip on">20K</div>
+            </div>
+            <div class="big-num masked">11.0K</div>
+            <div class="caption-line masked">次は20K・あと9.0K相当</div>
+            <div class="stat3">
+              <div class="stat-box"><div class="lbl">実測</div><div class="val masked">20.0</div></div>
+              <div class="stat-box"><div class="lbl">目標</div><div class="val masked">18.7</div></div>
+              <div class="stat-box"><div class="lbl">使用量</div><div class="val masked">2750</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="reasons">
+        <ul>
+          <li><b>テーマがズレる</b>：本文は「入力の軽さ」の話。これは判断ロジックの画面。</li>
+          <li><b>数値を隠しても</b>：レイアウト自体が閾値ベースの判定だと分かる作りなので、別の投稿文とセットで出す方が安全。</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Candidate C -->
+    <div class="option">
+      <div class="option-head">
+        <p class="option-title">候補C：元の画像（そのまま）</p>
+        <span class="verdict bad">非推奨</span>
+      </div>
+      <div class="phone">
+        <div class="screen">
+          <span class="redacted-tag">閾値が公開されます</span>
+          <div class="statusbar"><span>21:30</span><span>●●●●</span></div>
+          <div class="screen-title">見切りナビ</div>
+          <div class="screen-body" style="padding-top:14px;">
+            <div class="navi-head">
+              <span class="navi-pill">続行</span>
+              <span class="navi-ghost">根拠 ›</span>
+            </div>
+            <div class="chip-row">
+              <div class="chip">3K</div><div class="chip">5K</div><div class="chip">10K</div><div class="chip on">20K</div>
+            </div>
+            <div class="big-num">11.0K</div>
+            <div class="caption-line">次は20K・あと9.0K（約2250玉）</div>
+            <div class="stat3">
+              <div class="stat-box"><div class="lbl">実測</div><div class="val">20.0</div></div>
+              <div class="stat-box"><div class="lbl">目標</div><div class="val">18.7</div></div>
+              <div class="stat-box"><div class="lbl">使用量</div><div class="val">2750</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="reasons">
+        <ul>
+          <li><b>目標18.7回/K</b>が判断の内部基準として数値のまま公開される。</li>
+          <li><b>本文と無関係</b>：入力の軽さの投稿に判断ロジックの画面は繋がりにくい。</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="note">
+    候補A・Cの画面は実装済みの機能構成をもとにしたイメージ図（モック）です。実際にスクショを撮る際は、店舗名・個人情報・他社UIが写り込んでいないかも確認してください。
+  </footer>
+</div>

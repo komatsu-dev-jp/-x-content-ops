@@ -1,0 +1,137 @@
+<title>候補A 入力フロー画面</title>
+<style>
+  :root{
+    --phone-bg:#10201f;
+    --phone-surface:#16302c;
+    --phone-text:#eef5f2;
+    --phone-text-mute:#86a39c;
+    --accent:#1f9d6c;
+    --phone-line:rgba(255,255,255,0.09);
+  }
+  *{box-sizing:border-box;}
+  html,body{ margin:0; padding:0; }
+  body{
+    background:transparent;
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .phone{
+    width:390px;
+    background:#000;
+    border-radius:44px;
+    padding:12px;
+    box-shadow:0 24px 50px -20px rgba(0,0,0,0.5), 0 2px 0 rgba(255,255,255,0.04) inset;
+  }
+  .screen{
+    background:var(--phone-bg);
+    color:var(--phone-text);
+    border-radius:32px;
+    overflow:hidden;
+    aspect-ratio:9/17.5;
+    display:flex;
+    flex-direction:column;
+    font-size:15px;
+  }
+  .statusbar{
+    display:flex;
+    justify-content:space-between;
+    padding:16px 24px 0;
+    font-size:13px;
+    color:var(--phone-text-mute);
+    font-variant-numeric:tabular-nums;
+  }
+  .screen-title{
+    padding:20px 24px 6px;
+    font-size:13px;
+    color:var(--phone-text-mute);
+    letter-spacing:0.04em;
+  }
+  .screen-h1{
+    padding:0 24px 16px;
+    font-size:26px;
+    font-weight:800;
+  }
+  .screen-body{
+    padding:0 22px 22px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    flex:1;
+  }
+  .tap-row{ display:flex; gap:12px; }
+  .tap-btn{
+    flex:1;
+    background:var(--phone-surface);
+    border:1px solid var(--phone-line);
+    border-radius:18px;
+    padding:20px 14px;
+    text-align:center;
+    font-weight:700;
+    font-size:17px;
+  }
+  .tap-btn small{ display:block; font-weight:500; color:var(--phone-text-mute); font-size:13px; margin-top:6px;}
+  .tap-btn.on{ background:var(--accent); color:#06231a; border-color:transparent; }
+  .machine-card{
+    background:var(--phone-surface);
+    border:1px solid var(--phone-line);
+    border-radius:18px;
+    padding:16px 18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .machine-card .name{ font-weight:700; font-size:17px; }
+  .machine-card .sub{ color:var(--phone-text-mute); font-size:13px; margin-top:3px; }
+  .fab{
+    margin-top:auto;
+    align-self:center;
+    width:76px; height:76px;
+    border-radius:50%;
+    background:var(--accent);
+    color:#06231a;
+    display:flex; align-items:center; justify-content:center;
+    font-size:32px; font-weight:800;
+    box-shadow:0 14px 28px -10px rgba(31,157,108,0.6);
+  }
+  .fab-label{ text-align:center; font-size:13px; color:var(--phone-text-mute); margin-top:8px; }
+  .log-strip{
+    background:var(--phone-surface);
+    border-radius:16px;
+    padding:12px 16px;
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+    color:var(--phone-text-mute);
+  }
+</style>
+
+<div class="phone">
+  <div class="screen">
+    <div class="statusbar"><span>21:30</span><span>●●●●</span></div>
+    <div class="screen-title">記録する</div>
+    <div class="screen-h1">今どこですか？</div>
+    <div class="screen-body">
+      <div class="machine-card">
+        <div>
+          <div class="name">P大海物語5 MTE2</div>
+          <div class="sub">実戦中 &middot; 3列目 12番</div>
+        </div>
+        <div class="phone-text-mute">▾</div>
+      </div>
+      <div class="tap-row">
+        <div class="tap-btn on">続行<small>ここで打つ</small></div>
+        <div class="tap-btn">撤退<small>ヤメる</small></div>
+      </div>
+      <div class="tap-row">
+        <div class="tap-btn">根拠あり<small>回転良い</small></div>
+        <div class="tap-btn">根拠薄い<small>なんとなく</small></div>
+      </div>
+      <div class="fab">＋</div>
+      <div class="fab-label">タップで記録完了</div>
+      <div class="log-strip"><span>今日の記録</span><span>3件保存済み</span></div>
+    </div>
+  </div>
+</div>
