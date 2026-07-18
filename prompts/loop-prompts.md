@@ -26,18 +26,20 @@ Claude Code の `/loop` に貼って使う実戦テンプレ。`<<...>>` を環�
 
 手順:
 1. npm run weekly を実行し x-weekly-review で解釈。勝ち仮説を1つだけ出し ab_test_plan.csv に反映
-2. npm run backlog -- --status で未使用ネタを確認。来週の投稿は「まず backlog の未使用から引く」
+2. reply_outreach_log.csv で got_reply=1 だが follow が空欄の相手を確認し、
+   自分のフォロワー一覧と照合して follow=1/0 を更新する（週次でこのチャネルの転換率を必ず把握する）
+3. npm run backlog -- --status で未使用ネタを確認。来週の投稿は「まず backlog の未使用から引く」
    （ゼロから考えず在庫を使う。足りない角度だけ x-idea-harvest で補う）
-3. 引いたネタと仮説・型×時間帯ローテに沿って x-growth-company で投稿を5本生成
-4. 各案を x-score-post と x-risk-check にかけ、score90以上 / risk none になるまで直す
-5. **投稿日は月・水・金の3枠だけに割り当てる**（曜日別ルーティンの正典。毎日投稿にしない。
+4. 引いたネタと仮説・型×時間帯ローテに沿って x-growth-company で投稿を5本生成
+5. 各案を x-score-post と x-risk-check にかけ、score90以上 / risk none になるまで直す
+6. **投稿日は月・水・金の3枠だけに割り当てる**（曜日別ルーティンの正典。毎日投稿にしない。
    金曜は5本中いちばん強い1本）。残り2本は「翌週在庫」として翌週の月・水に仮置きする
-6. 使ったネタは npm run backlog -- --consume "idea前方一致" post_id=... で投稿済にする
-7. 未使用が10件を切っていたら x-idea-harvest で15件まで補充
-8. npm run schedule で予約用CSVを output/ に書き出す
+7. 使ったネタは npm run backlog -- --consume "idea前方一致" post_id=... で投稿済にする
+8. 未使用が10件を切っていたら x-idea-harvest で15件まで補充
+9. npm run schedule で予約用CSVを output/ に書き出す
 
 達成条件: 5本が score90↑ / risk none / 月水金3本+翌週在庫2本に割当済み / CSV出力済み /
-　　　　　backlog消化と補充が済んでいる
+　　　　　backlog消化と補充が済んでいる / リプ周りのfollow追跡が更新済み
 達成したら要約を出して停止。公開・コミットはしない（人間が確認）。
 ```
 
