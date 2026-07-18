@@ -4,5 +4,3 @@ date,suggested_time,post_id,post_type,time_slot,has_image,image_type,status,firs
 2026-07-24,21:30,week05-p1,検証メモ型,night,FALSE,none,scheduled,続行を決めた理由、書いた直後は絶対正しいと思ってた。
 2026-07-27,08:30,week05-p2,検証メモ型,morning,FALSE,none,scheduled,「今日は回ってた」という感覚と、あとで見返す数字がズレてる瞬間がある。
 2026-07-29,12:30,week05-p3,失敗告白型,noon,FALSE,none,scheduled,入力を軽くしようとして、結局どの項目を削るかで一番悩みました。
-2026-07-31,21:30,week05-p4,あるある型,night,FALSE,none,scheduled,これ、あるある。
-2026-08-03,08:30,week05-p5,問題提起型,morning,FALSE,none,scheduled,記録だけつけて、見返す時間を作らないと、記録すること自体が目的になってしまう。

@@ -25,5 +25,3 @@ date,post_id,status,theme,post_type,hook_type,has_image,image_type,has_video,lin
 2026-07-24,week05-p1,scheduled,振り返り,検証メモ型,,FALSE,none,,,0,night,fri,78,続行を決めた理由、書いた直後は絶対正しいと思ってた。,,,,,,,,,,,,,,,,,,,金曜=週内最強枠。検証メモ型は時間帯問わずpv高い(仮説)ため起用。score92
 2026-07-27,week05-p2,scheduled,記憶バイアス,検証メモ型,,FALSE,none,,,0,morning,mon,77,「今日は回ってた」という感覚と、あとで見返す数字がズレてる瞬間がある。,,,,,,,,,,,,,,,,,,,検証メモ型2本目(仮説の再現性検証)。score91
 2026-07-29,week05-p3,scheduled,入力設計,失敗告白型,,FALSE,none,,,0,noon,wed,83,入力を軽くしようとして、結局どの項目を削るかで一番悩みました。,,,,,,,,,,,,,,,,,,,開発側の悩み視点で入力設計テーマの別角度。score90
-2026-07-31,week05-p4,scheduled,店選び,あるある型,,FALSE,none,,,0,night,fri,97,これ、あるある。,,,,,,,,,,,,,,,,,,,翌週在庫。あるある型は継続して型自体が優勢(仮説)。score90
-2026-08-03,week05-p5,scheduled,継続設計,問題提起型,,FALSE,none,,,0,morning,mon,89,記録だけつけて、見返す時間を作らないと、記録すること自体が目的になってしまう。,,,,,,,,,,,,,,,,,,,翌週在庫。score89
