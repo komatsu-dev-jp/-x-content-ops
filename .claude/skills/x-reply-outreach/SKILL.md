@@ -105,6 +105,14 @@ npm run today -- --done reply target_url=<相手投稿URL> note=<使った型な
   （`--done follow target_url=...`）。機械的に毎日フォローするとFF比が悪化し、
   プロフィール遷移してきた人への信頼感を損なう。
 
+**重要（記録漏れ対策）**: フォロー実施・フォロー返しは、いいね・リプと違って報告トリガーが無く、
+実施していても言い忘れて記録が漏れ続けた実績がある（2026-07-19判明、`memory/feedback_daily_tracking.md`）。
+リプの送信報告を受けたら、**返事を待たずにこちらから毎回**「フォローした人・フォロー返しがあった人はいますか？」
+と確認すること。
+- フォロー実施（自分が誰かをフォローした）→ `--done follow target_url=...`（daily_activity_log.csv）
+- フォロー返し（相手が自分をフォローしてきた）→ 下の「反応の記録」の `follow=1` 更新（reply_outreach_log.csv）
+  ※向きが逆の別概念なので混同しない。
+
 ## 反応の記録（必須・週次分析の前提）
 
 送信直後、まず `data/reply_outreach_log.csv` に1件記録する:
