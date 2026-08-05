@@ -35,6 +35,8 @@ PachiTracker must not be presented as:
 
 When the task involves X posts, SNS strategy, beta recruitment, UI screenshot captions, post analysis, weekly review, or reply templates, use the `x-growth-company` workflow.
 
+When the task involves designing an X account itself — choosing a lane, display name, handle, bio, icon/header direction, pinned post, or auditing an existing profile — use the `x-account-launch` skill instead. It stops at proposals: it never creates accounts, edits profiles, or posts.
+
 ## AI Organization Roles
 
 Use these roles internally:

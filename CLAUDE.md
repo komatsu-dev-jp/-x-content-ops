@@ -16,6 +16,7 @@ PachiTracker（パチンコの判断ログアプリ）のX運用を、小さなA
 ### 生成
 
 - X投稿・SNS戦略・β募集・UIキャプション・採点・週次・返信を扱うとき → 対応するSkillを必ず使う（`x-growth-company` / `x-draft-post` / `x-idea-harvest` / `x-score-post` / `x-risk-check` / `x-weekly-review` / `x-reply-assistant` / `x-reply-outreach`）
+- Xアカウントの初期設計（レーン選定・表示名・bio・アイコン・固定ポスト）や既存プロフィールの診断を扱うとき → `x-account-launch` を使う（日々の投稿づくりとは別物）
 - 文体・型・禁止表現に迷ったとき → `prompts/` を正典とする（`pachitracker-positioning` / `post-patterns` / `scoring-rubric` / `banned-patterns` / `reply-outreach-playbook`）
 - 成果物を保存するとき → `output/` 配下に保存し、`data/post_log.csv` は追記のみ（上書き禁止）
 
