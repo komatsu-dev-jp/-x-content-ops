@@ -1,0 +1,92 @@
+{
+  "eval_1": {
+    "eval_name": "basic-commit-push-pr-merge-flow",
+    "assertions": [
+      {
+        "id": "git_commit_created",
+        "description": "Git commit was created with correct message",
+        "check": "Verify commit message contains 'Test case 1' or similar"
+      },
+      {
+        "id": "git_push_successful",
+        "description": "Git push to origin was successful",
+        "check": "Verify git push output shows branch update"
+      },
+      {
+        "id": "pr_created",
+        "description": "PR was created on GitHub",
+        "check": "PR number > 0, PR URL contains repo and pull/<number>"
+      },
+      {
+        "id": "merge_log_recorded",
+        "description": "Merge log entry was written to output/prs/merge-log.md",
+        "check": "File contains row with | 日時 | PR# | タイトル | squash | SHA |"
+      },
+      {
+        "id": "completion_screen_displayed",
+        "description": "Final completion screen shows ✅ PR #X マージ済み",
+        "check": "Output contains checkmark and /clear recommendation"
+      }
+    ]
+  },
+  "eval_2": {
+    "eval_name": "new-branch-feature-workflow",
+    "assertions": [
+      {
+        "id": "new_branch_created_and_pushed",
+        "description": "New branch (feature/sample-feature) was created and pushed",
+        "check": "git push output shows 'new branch' or 'create branch'"
+      },
+      {
+        "id": "pr_head_is_feature_branch",
+        "description": "PR head branch is feature/sample-feature (not current branch)",
+        "check": "PR details show head: feature/sample-feature"
+      },
+      {
+        "id": "pr_merges_to_main",
+        "description": "PR is set to merge to main",
+        "check": "PR details show base: main"
+      },
+      {
+        "id": "merge_log_includes_feature_branch_info",
+        "description": "Merge log records the feature branch context",
+        "check": "Merge log entry exists and SHA is valid"
+      },
+      {
+        "id": "no_errors_on_new_branch",
+        "description": "Skill handles new branches without errors",
+        "check": "No error messages in output, completion screen shown"
+      }
+    ]
+  },
+  "eval_3": {
+    "eval_name": "multi-file-changes-workflow",
+    "assertions": [
+      {
+        "id": "multiple_files_committed_together",
+        "description": "Both modified SKILL.md and new references/example.md are in same commit",
+        "check": "git log shows 1 commit with 2 files changed"
+      },
+      {
+        "id": "commit_message_accurate",
+        "description": "Commit message reflects multi-file change",
+        "check": "Commit message contains 'Improve' and 'enhance'"
+      },
+      {
+        "id": "pr_shows_multiple_file_diff",
+        "description": "PR shows changes to both files",
+        "check": "PR files changed count >= 2"
+      },
+      {
+        "id": "merge_log_handles_complex_commits",
+        "description": "Merge log correctly records commits with multiple file changes",
+        "check": "Merge log entry is recorded and SHA is correct"
+      },
+      {
+        "id": "skill_scales_to_multi_file",
+        "description": "Skill completes successfully with multiple files",
+        "check": "No errors, completion screen displayed"
+      }
+    ]
+  }
+}
