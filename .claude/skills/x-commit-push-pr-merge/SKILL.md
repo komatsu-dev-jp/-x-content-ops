@@ -162,3 +162,5 @@ git の commit 〜 push 〜 PR作成 〜 マージ 〜 ログ記録 〜 clear促
 
 - 2026-08-06: Test Case 1 execution for warmup benchmark validation
 - 2026-08-06: Test Case 3 multi-file changes validation (SKILL.md + references/example.md)
+  - Scenario: Add example.md reference file alongside SKILL.md modification
+  - Expected: Both files committed, pushed, and PR created with squash merge
