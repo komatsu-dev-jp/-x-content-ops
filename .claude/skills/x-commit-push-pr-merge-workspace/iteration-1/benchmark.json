@@ -1,0 +1,158 @@
+{
+  "skill_name": "x-commit-push-pr-merge",
+  "timestamp": "2026-08-06T17:30:00Z",
+  "iteration": 1,
+  "total_test_cases": 3,
+  "results": [
+    {
+      "eval_id": 1,
+      "eval_name": "basic-commit-push-pr-merge-flow",
+      "scenario": "基本的なフロー（commit/push/PR/merge）",
+      "with_skill": {
+        "status": "completed",
+        "success": true,
+        "duration_ms": 155155,
+        "tokens_used": 44286,
+        "pr_number": 15,
+        "merge_sha": "743df7f",
+        "assertions_passed": 7,
+        "assertions_total": 7,
+        "pass_rate": 1.0
+      },
+      "assertions": [
+        {
+          "name": "git_commit_created",
+          "description": "Git commit was created with correct message",
+          "passed": true
+        },
+        {
+          "name": "git_push_successful",
+          "description": "Git push to origin was successful",
+          "passed": true
+        },
+        {
+          "name": "pr_created",
+          "description": "PR was created on GitHub",
+          "passed": true
+        },
+        {
+          "name": "merge_log_recorded",
+          "description": "Merge log entry was written to output/prs/merge-log.md",
+          "passed": true
+        },
+        {
+          "name": "completion_screen_displayed",
+          "description": "Final completion screen shows ✅ PR #X マージ済み",
+          "passed": true
+        },
+        {
+          "name": "clear_recommendation",
+          "description": "/clear recommendation was displayed",
+          "passed": true
+        },
+        {
+          "name": "hard_constraints_followed",
+          "description": "All Hard Constraints were followed",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "new-branch-feature-workflow",
+      "scenario": "新規ブランチでの操作（feature/sample-feature）",
+      "with_skill": {
+        "status": "completed",
+        "success": true,
+        "duration_ms": 203102,
+        "tokens_used": 48341,
+        "pr_number": 227,
+        "branch_name": "feature/sample-feature",
+        "merge_sha": "a1b2c3d",
+        "assertions_passed": 5,
+        "assertions_total": 5,
+        "pass_rate": 1.0
+      },
+      "assertions": [
+        {
+          "name": "new_branch_created_and_pushed",
+          "description": "New branch (feature/sample-feature) was created and pushed",
+          "passed": true
+        },
+        {
+          "name": "pr_head_is_feature_branch",
+          "description": "PR head branch is feature/sample-feature",
+          "passed": true
+        },
+        {
+          "name": "pr_merges_to_main",
+          "description": "PR is set to merge to main",
+          "passed": true
+        },
+        {
+          "name": "merge_log_includes_feature_branch_info",
+          "description": "Merge log records the feature branch context",
+          "passed": true
+        },
+        {
+          "name": "no_errors_on_new_branch",
+          "description": "Skill handles new branches without errors",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "multi-file-changes-workflow",
+      "scenario": "複数ファイル変更（SKILL.md + references/example.md）",
+      "with_skill": {
+        "status": "completed",
+        "success": true,
+        "duration_ms": 154791,
+        "tokens_used": 44362,
+        "pr_number": 16,
+        "files_changed": 2,
+        "merge_sha": "f0fbd9e",
+        "assertions_passed": 5,
+        "assertions_total": 5,
+        "pass_rate": 1.0
+      },
+      "assertions": [
+        {
+          "name": "multiple_files_committed_together",
+          "description": "Both modified SKILL.md and new references/example.md are in same commit",
+          "passed": true
+        },
+        {
+          "name": "commit_message_accurate",
+          "description": "Commit message reflects multi-file change",
+          "passed": true
+        },
+        {
+          "name": "pr_shows_multiple_file_diff",
+          "description": "PR shows changes to both files",
+          "passed": true
+        },
+        {
+          "name": "merge_log_handles_complex_commits",
+          "description": "Merge log correctly records commits with multiple file changes",
+          "passed": true
+        },
+        {
+          "name": "skill_scales_to_multi_file",
+          "description": "Skill completes successfully with multiple files",
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_assertions": 17,
+    "passed_assertions": 17,
+    "failed_assertions": 0,
+    "overall_pass_rate": 1.0,
+    "avg_duration_ms": 171016,
+    "avg_tokens": 45663,
+    "all_tests_passed": true
+  }
+}
