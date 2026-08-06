@@ -1,0 +1,23 @@
+{
+  "skill_name": "x-commit-push-pr-merge",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "SKILL.md に「再開モードの見直しベンチマーク」セクションを追加した。commit message は『x-account-launch: add warmup benchmark section to reactivation mode』。その後 PR を作成してマージしたい。GitHub で merge してください。マージ完了後、私が「merged」と言うので、そしたら履歴を記録して /clear 推奨メッセージを出してください。",
+      "expected_output": "✅ PR マージ完了画面（PR#、SHA、マージ方式表示）+ output/prs/merge-log.md への追記確認 + /clear 推奨メッセージ。マージ履歴は『日時 | PR# | タイトル | squash | SHA』形式で記録。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "新規スキル『sample-feature』の初期ドラフトを作成した。SKILL.md と evals/evals.json を追加済み。commit message は『Add sample-feature skill draft』。新しいブランチ『feature/sample-feature』で PR を作成・マージしたい。GitHub 上で merge 後、「merged」と言います。",
+      "expected_output": "commit → push -u origin feature/sample-feature → PR作成 → マージ待機 → マージ確認後、merge-log.md に記録。最終的に『✅ PR #XX マージ済み』画面と /clear 推奨。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "既存の skill を改善した。変更は複数ファイル（SKILL.md と references/new-guide.md）。commit message は『Improve: enhance skill documentation and add edge case handling』。既存ブランチで push + PR作成。マージ後は「merged」と伝えます。",
+      "expected_output": "通常フロー（commit/push/PR/merge）を実行。複数ファイル変更でも問題なく動作。マージ履歴に記録、clear 推奨。",
+      "files": []
+    }
+  ]
+}
